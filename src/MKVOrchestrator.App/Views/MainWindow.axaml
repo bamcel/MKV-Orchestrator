@@ -1,0 +1,132 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MKVOrchestrator.App.ViewModels"
+        xmlns:dashboard="using:MKVOrchestrator.App.Views.Dashboard"
+        xmlns:rename="using:MKVOrchestrator.App.Views.Rename"
+        xmlns:merge="using:MKVOrchestrator.App.Views.Merge"
+        xmlns:propedit="using:MKVOrchestrator.App.Views.PropEdit"
+        xmlns:settings="using:MKVOrchestrator.App.Views.Settings"
+        xmlns:audit="using:MKVOrchestrator.App.Views.Audit"
+        x:Class="MKVOrchestrator.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1500" Height="900"
+        MinWidth="1150" MinHeight="720"
+        Title="MKV Orchestrator">
+  <Grid ColumnDefinitions="236,*" Margin="10" ColumnSpacing="12">
+    <Border Grid.Column="0" Classes="sidebar">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,14">
+          <TextBlock Text="MKV Orchestrator" Classes="app-title" />
+          <TextBlock Text="Media operations console" Classes="muted" FontSize="12" />
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,14,0,0">
+          <Border Classes="status-strip">
+            <StackPanel Spacing="4">
+              <TextBlock Text="Status" Classes="nav-caption" />
+              <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" Classes="success" />
+            </StackPanel>
+          </Border>
+          <Button Content="Cancel Operation"
+                  Command="{Binding CancelCommand}"
+                  IsEnabled="{Binding IsBusy}"
+                  HorizontalAlignment="Stretch" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <RadioButton Content="Dashboard"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsDashboardSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Dashboard" />
+          <RadioButton Content="Rename Files"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsRenameSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Rename" />
+          <RadioButton Content="Merge / Remux"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsMergeSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Merge" />
+          <RadioButton Content="Track Properties"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsPropertiesSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Properties" />
+          <RadioButton Content="Library"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsLibraryAuditSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Library" />
+          <RadioButton Content="Settings"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsSettingsSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Settings" />
+          <RadioButton Content="Logs"
+                       Classes="nav-item"
+                       GroupName="MainNavigation"
+                       IsChecked="{Binding IsLogsSection}"
+                       Command="{Binding SelectSectionCommand}"
+                       CommandParameter="Logs" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="10">
+      <Border Grid.Row="0" Classes="workspace-header">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <StackPanel Spacing="3">
+            <TextBlock Text="{Binding CurrentSection}" Classes="workspace-title" />
+            <TextBlock Text="{Binding CurrentSectionDescription}" Classes="muted" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Width="220" Spacing="4" VerticalAlignment="Center">
+            <ProgressBar Height="8"
+                         Minimum="0"
+                         Maximum="100"
+                         Value="{Binding GlobalProgressValue}"
+                         IsIndeterminate="{Binding IsGlobalProgressIndeterminate}" />
+            <TextBlock Text="{Binding GlobalProgressText}"
+                       Classes="muted"
+                       FontSize="11"
+                       TextAlignment="Right"
+                       TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="1">
+        <dashboard:DashboardPanel IsVisible="{Binding IsDashboardSection}" />
+        <rename:RenamePanel IsVisible="{Binding IsRenameSection}" />
+        <merge:MergePanel IsVisible="{Binding IsMergeSection}" />
+        <propedit:PropEditPanel IsVisible="{Binding IsPropertiesSection}" />
+        <audit:LibraryAuditPanel IsVisible="{Binding IsLibraryAuditSection}" />
+        <settings:SettingsPanel IsVisible="{Binding IsSettingsSection}" />
+
+        <Border Classes="card"
+                IsVisible="{Binding IsLogsSection}">
+          <DockPanel>
+            <ListBox ItemsSource="{Binding ConsoleLines}" Classes="console" Margin="4">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}"
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             LineHeight="13"
+                             Margin="0,-2,0,-2" />
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Border>
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>
