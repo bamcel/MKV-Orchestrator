@@ -37,6 +37,17 @@
               <StackPanel Grid.Row="5" Spacing="3" HorizontalAlignment="Left" Width="330">
                 <RadioButton Classes="mode-option"
                              GroupName="ContainerTitleMode"
+                             IsChecked="{Binding PropRemoveContainerTitle}">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Border Grid.Column="0" Classes="mode-check" IsVisible="{Binding PropRemoveContainerTitle}">
+                      <TextBlock Text="✓" Classes="mode-checkmark" />
+                    </Border>
+                    <Border Grid.Column="0" Classes="mode-check-empty" IsVisible="{Binding !PropRemoveContainerTitle}" />
+                    <TextBlock Grid.Column="1" Text="Remove title" Foreground="#F8F8F2" VerticalAlignment="Center" />
+                  </Grid>
+                </RadioButton>
+                <RadioButton Classes="mode-option"
+                             GroupName="ContainerTitleMode"
                              IsChecked="{Binding PropKeepContainerTitle}">
                   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                     <Border Grid.Column="0" Classes="mode-check" IsVisible="{Binding PropKeepContainerTitle}">
@@ -71,22 +82,21 @@
                 <TextBox Text="{Binding PropCustomContainerTitle}"
                          MinHeight="36"
                          Padding="10,0,8,0" />
-                <RadioButton Classes="mode-option"
-                             GroupName="ContainerTitleMode"
-                             IsChecked="{Binding PropRemoveContainerTitle}">
-                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                    <Border Grid.Column="0" Classes="mode-check" IsVisible="{Binding PropRemoveContainerTitle}">
-                      <TextBlock Text="✓" Classes="mode-checkmark" />
-                    </Border>
-                    <Border Grid.Column="0" Classes="mode-check-empty" IsVisible="{Binding !PropRemoveContainerTitle}" />
-                    <TextBlock Grid.Column="1" Text="Remove title" Foreground="#F8F8F2" VerticalAlignment="Center" />
-                  </Grid>
-                </RadioButton>
               </StackPanel>
-
               <TextBlock Grid.Row="6" Text="Video Track Name" FontSize="13" FontWeight="SemiBold" Foreground="#F8F8F2" Margin="0,7,0,1" />
 
               <StackPanel Grid.Row="7" Spacing="3" HorizontalAlignment="Left" Width="330">
+                <RadioButton Classes="mode-option"
+                             GroupName="VideoTitleMode"
+                             IsChecked="{Binding PropRemoveVideoTitle}">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Border Grid.Column="0" Classes="mode-check" IsVisible="{Binding PropRemoveVideoTitle}">
+                      <TextBlock Text="✓" Classes="mode-checkmark" />
+                    </Border>
+                    <Border Grid.Column="0" Classes="mode-check-empty" IsVisible="{Binding !PropRemoveVideoTitle}" />
+                    <TextBlock Grid.Column="1" Text="Remove video name" Foreground="#F8F8F2" VerticalAlignment="Center" />
+                  </Grid>
+                </RadioButton>
                 <RadioButton Classes="mode-option"
                              GroupName="VideoTitleMode"
                              IsChecked="{Binding PropKeepVideoTitle}">
@@ -123,19 +133,7 @@
                 <TextBox Text="{Binding PropCustomVideoTitle}"
                          MinHeight="36"
                          Padding="10,0,8,0" />
-                <RadioButton Classes="mode-option"
-                             GroupName="VideoTitleMode"
-                             IsChecked="{Binding PropRemoveVideoTitle}">
-                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                    <Border Grid.Column="0" Classes="mode-check" IsVisible="{Binding PropRemoveVideoTitle}">
-                      <TextBlock Text="✓" Classes="mode-checkmark" />
-                    </Border>
-                    <Border Grid.Column="0" Classes="mode-check-empty" IsVisible="{Binding !PropRemoveVideoTitle}" />
-                    <TextBlock Grid.Column="1" Text="Remove video name" Foreground="#F8F8F2" VerticalAlignment="Center" />
-                  </Grid>
-                </RadioButton>
               </StackPanel>
-
               <TextBlock Grid.Row="8" Text="Execution" FontSize="13" FontWeight="SemiBold" Foreground="#F8F8F2" Margin="0,7,0,1" />
 
               <StackPanel Grid.Row="9"
