@@ -82,22 +82,10 @@
 
     <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="10">
       <Border Grid.Row="0" Classes="workspace-header">
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <Grid>
           <StackPanel Spacing="3">
             <TextBlock Text="{Binding CurrentSection}" Classes="workspace-title" />
             <TextBlock Text="{Binding CurrentSectionDescription}" Classes="muted" />
-          </StackPanel>
-          <StackPanel Grid.Column="1" Width="220" Spacing="4" VerticalAlignment="Center">
-            <ProgressBar Height="8"
-                         Minimum="0"
-                         Maximum="100"
-                         Value="{Binding GlobalProgressValue}"
-                         IsIndeterminate="{Binding IsGlobalProgressIndeterminate}" />
-            <TextBlock Text="{Binding GlobalProgressText}"
-                       Classes="muted"
-                       FontSize="11"
-                       TextAlignment="Right"
-                       TextTrimming="CharacterEllipsis" />
           </StackPanel>
         </Grid>
       </Border>
