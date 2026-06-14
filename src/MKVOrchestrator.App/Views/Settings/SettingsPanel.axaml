@@ -363,74 +363,133 @@
                       <TextBlock Text="Media operations for MKV scanning, renaming, remuxing, metadata editing, and library overview workflows." TextWrapping="Wrap" Classes="muted" />
 
                       <Border Classes="panel">
-                        <StackPanel Spacing="8">
+                        <StackPanel Spacing="10">
+                          <TextBlock Text="Integrations &amp; Attribution" Classes="section-header" />
 
-                          <TextBlock Text="Metadata Providers" Classes="section-header" />
-
-                      <Grid ColumnDefinitions="72,*" ColumnSpacing="12" Margin="0,4,0,0">
-                            <Border Grid.Column="0" Width="64" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                              <Image Source="/Assets/Logos/tmdb.png"
-                                     MaxHeight="48"
-                                     MaxWidth="64"
-                                     Stretch="Uniform"
-                                     ToolTip.Tip="TMDB" />
+                          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    Background="#252733"
+                                    BorderBrush="#3A3D4E"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="10">
+                              <Grid ColumnDefinitions="92,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        Width="82"
+                                        Height="72"
+                                        Background="#1F222C"
+                                        BorderBrush="#3A3D4E"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                  <Image Source="/Assets/Logos/tmdb.png"
+                                         MaxHeight="58"
+                                         MaxWidth="72"
+                                         Stretch="Uniform"
+                                         ToolTip.Tip="TMDB" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                  <TextBlock Text="TMDB" FontWeight="SemiBold" />
+                                  <TextBlock Text="This product uses the TMDB API but is not endorsed or certified by TMDB."
+                                             TextWrapping="Wrap"
+                                             Classes="muted" />
+                                </StackPanel>
+                              </Grid>
                             </Border>
-                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                              <TextBlock Text="This product uses the TMDB API but is not endorsed or certified by TMDB."
-                                         TextWrapping="Wrap"
-                                         Classes="muted" />
-                            </StackPanel>
-                          </Grid>
 
-                          <Grid ColumnDefinitions="72,*" ColumnSpacing="12" Margin="0,4,0,0">
-                            <Border Grid.Column="0" Width="64" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                              <Image Source="/Assets/Logos/tvdb.png"
-                                     MaxHeight="48"
-                                     MaxWidth="64"
-                                     Stretch="Uniform"
-                                     ToolTip.Tip="TheTVDB" />
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    Background="#252733"
+                                    BorderBrush="#3A3D4E"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="10">
+                              <Grid ColumnDefinitions="92,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        Width="82"
+                                        Height="72"
+                                        Background="#1F222C"
+                                        BorderBrush="#3A3D4E"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                  <Image Source="/Assets/Logos/tvdb.png"
+                                         MaxHeight="58"
+                                         MaxWidth="72"
+                                         Stretch="Uniform"
+                                         ToolTip.Tip="TheTVDB" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                  <TextBlock Text="TheTVDB" FontWeight="SemiBold" />
+                                  <TextBlock Text="Metadata provided by TheTVDB."
+                                             TextWrapping="Wrap"
+                                             Classes="muted" />
+                                </StackPanel>
+                              </Grid>
                             </Border>
-                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                              <TextBlock Text="Metadata provided by TheTVDB."
-                                         TextWrapping="Wrap"
-                                         Classes="muted" />
-                            </StackPanel>
-                          </Grid>
-                        </StackPanel>
-                      </Border>
 
-                      <Border Classes="panel">
-                        <StackPanel Spacing="8">
-                          <TextBlock Text="Media Tooling" Classes="section-header" />
-
-                          <Grid ColumnDefinitions="72,*" ColumnSpacing="12" Margin="0,4,0,0">
-                            <Border Grid.Column="0" Width="64" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                              <Image Source="/Assets/Logos/mkvtoolnix.png"
-                                     MaxHeight="48"
-                                     MaxWidth="64"
-                                     Stretch="Uniform"
-                                     ToolTip.Tip="MKVToolNix" />
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    Background="#252733"
+                                    BorderBrush="#3A3D4E"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="10">
+                              <Grid ColumnDefinitions="92,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        Width="82"
+                                        Height="72"
+                                        Background="#1F222C"
+                                        BorderBrush="#3A3D4E"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                  <Image Source="/Assets/Logos/mkvtoolnix.png"
+                                         MaxHeight="62"
+                                         MaxWidth="64"
+                                         Stretch="Uniform"
+                                         ToolTip.Tip="MKVToolNix" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                  <TextBlock Text="MKVToolNix" FontWeight="SemiBold" />
+                                  <TextBlock Text="Used for MKV remuxing, metadata editing, extraction, and analysis."
+                                             TextWrapping="Wrap"
+                                             Classes="muted" />
+                                </StackPanel>
+                              </Grid>
                             </Border>
-                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                              <TextBlock Text="MKVToolNix tools are used for MKV remuxing, metadata editing, extraction, and analysis."
-                                         TextWrapping="Wrap"
-                                         Classes="muted" />
-                            </StackPanel>
-                          </Grid>
 
-                          <Grid ColumnDefinitions="72,*" ColumnSpacing="12" Margin="0,4,0,0">
-                            <Border Grid.Column="0" Width="64" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center">
-                              <Image Source="/Assets/Logos/ffmpeg.png"
-                                     MaxHeight="48"
-                                     MaxWidth="64"
-                                     Stretch="Uniform"
-                                     ToolTip.Tip="FFmpeg" />
+                            <Border Grid.Row="1" Grid.Column="1"
+                                    Background="#252733"
+                                    BorderBrush="#3A3D4E"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="10">
+                              <Grid ColumnDefinitions="92,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        Width="82"
+                                        Height="72"
+                                        Background="#1F222C"
+                                        BorderBrush="#3A3D4E"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                  <Image Source="/Assets/Logos/ffmpeg.png"
+                                         MaxHeight="52"
+                                         MaxWidth="66"
+                                         Stretch="Uniform"
+                                         ToolTip.Tip="FFmpeg" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                  <TextBlock Text="FFmpeg / ffprobe" FontWeight="SemiBold" />
+                                  <TextBlock Text="Used as a fallback for media metadata analysis."
+                                             TextWrapping="Wrap"
+                                             Classes="muted" />
+                                </StackPanel>
+                              </Grid>
                             </Border>
-                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                              <TextBlock Text="FFmpeg/ffprobe is used for media metadata analysis."
-                                         TextWrapping="Wrap"
-                                         Classes="muted" />
-                            </StackPanel>
                           </Grid>
                         </StackPanel>
                       </Border>

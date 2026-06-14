@@ -263,12 +263,8 @@ public partial class MainWindowViewModel
             var filesSkipped = filesScanned - filesChanged;
 
             RenameStatusText = $"Preview ready: {exactMatched} exact, {sequentialMatched} sequential fallback, {RenameItems.Count - exactMatched - sequentialMatched} unmatched";
-        IsRenamePreviewDirty = false;
-            RenameLog(RenameStatusText);
-            RenameLog("Dry run summary:");
-            RenameLog($"Files scanned: {filesScanned}");
-            RenameLog($"Files changed: {filesChanged}");
-            RenameLog($"Files skipped: {filesSkipped}");
+            IsRenamePreviewDirty = false;
+            BuildRenamePreviewSummary(filesChanged, filesSkipped);
         }
         catch (Exception ex)
         {
@@ -279,6 +275,39 @@ public partial class MainWindowViewModel
         {
             IsBusy = false;
         }
+    }
+
+    private void BuildRenamePreviewSummary(int filesChanged, int filesSkipped)
+    {
+        RenameConsoleLines.Clear();
+        RenameConsoleLines.Add("mkvrename Summary - DRY RUN");
+        RenameConsoleLines.Add($"Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        RenameConsoleLines.Add($"Files changed: {filesChanged} | Files skipped: {filesSkipped}");
+        RenameConsoleLines.Add(new string('=', 92));
+
+        var changedItems = RenameItems
+            .Where(i => !string.IsNullOrWhiteSpace(i.NewFileName)
+                        && !string.Equals(i.CurrentFileName, i.NewFileName, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.Season ?? int.MaxValue)
+            .ThenBy(i => i.Episode ?? int.MaxValue)
+            .ThenBy(i => i.CurrentFileName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (changedItems.Count > 0)
+        {
+            RenameConsoleLines.Add("CHANGED FILES:");
+
+            foreach (var item in changedItems)
+            {
+                RenameConsoleLines.Add($"  - {item.CurrentFileName} -> {item.NewFileName}");
+            }
+        }
+        else
+        {
+            RenameConsoleLines.Add("CHANGED FILES: None");
+        }
+
+        RenameConsoleLines.Add(new string('=', 92));
     }
 
     private async Task LoadTvdbSeasonScopesAndPreviewAsync()
