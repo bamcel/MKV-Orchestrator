@@ -303,6 +303,12 @@ public sealed class MkvMergeService
 
         foreach (var file in selectedFiles)
         {
+            if (!CrossPlatformRuntime.IsMkvPath(file.FilePath))
+            {
+                plan.NoChangeFiles.Add(file.FilePath);
+                continue;
+            }
+
             var addedForFile = false;
 
             var action = BuildRemuxAction(

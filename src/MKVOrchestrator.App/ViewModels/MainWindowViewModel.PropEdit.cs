@@ -538,6 +538,12 @@ public partial class MainWindowViewModel
 
         foreach (var file in selectedFiles)
         {
+            if (!CrossPlatformRuntime.IsMkvPath(file.FilePath))
+            {
+                plan.SkippedFiles.Add(new PropEditSkippedFile(file.FilePath, "Track property edits are only available for MKV files."));
+                continue;
+            }
+
             if (!HasCompatibleTrackLayout(template, file, out var layoutError))
             {
                 plan.SkippedFiles.Add(new PropEditSkippedFile(file.FilePath, layoutError));

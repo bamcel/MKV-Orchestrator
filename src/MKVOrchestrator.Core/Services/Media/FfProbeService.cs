@@ -8,19 +8,88 @@ public sealed class FfProbeService
 {
     private readonly ProcessRunner _runner = new();
 
+    public async Task<MkvFileItem> IdentifyAsync(string ffProbePath, string filePath, CancellationToken token)
+    {
+        ValidateFfProbePath(ffProbePath);
+        ffProbePath = ResolveFfProbeExecutable(ffProbePath);
+
+        var result = await _runner.RunAsync(ffProbePath, new[]
+        {
+            "-v", "error",
+            "-show_entries", "format=format_name:stream=index,codec_type,codec_name,codec_long_name,profile,width,height,pix_fmt,bits_per_raw_sample,bits_per_sample:stream_tags=language,title:stream_disposition=default,forced",
+            "-of", "json",
+            CrossPlatformRuntime.ToProcessArgumentPath(filePath)
+        }, token);
+
+        if (result.ExitCode != 0)
+        {
+            var err = string.IsNullOrWhiteSpace(result.StandardError) ? result.StandardOutput : result.StandardError;
+            throw new InvalidOperationException($"ffprobe failed: {err.Trim()}");
+        }
+
+        if (string.IsNullOrWhiteSpace(result.StandardOutput))
+            throw new InvalidOperationException("ffprobe returned no JSON output.");
+
+        using var doc = JsonDocument.Parse(result.StandardOutput);
+        var item = new MkvFileItem { FilePath = filePath };
+        if (!doc.RootElement.TryGetProperty("streams", out var streams) || streams.ValueKind != JsonValueKind.Array)
+        {
+            item.Status = "Scanned - no tracks found";
+            return item;
+        }
+
+        var propEditNumber = 1;
+        foreach (var stream in streams.EnumerateArray())
+        {
+            var type = NormalizeStreamType(GetString(stream, "codec_type"));
+            if (string.IsNullOrWhiteSpace(type)) continue;
+
+            var codec = GetString(stream, "codec_name")
+                        ?? GetString(stream, "codec_long_name")
+                        ?? string.Empty;
+
+            var tags = stream.TryGetProperty("tags", out var tagElement) ? tagElement : default;
+            var disposition = stream.TryGetProperty("disposition", out var dispositionElement) ? dispositionElement : default;
+            var track = new MkvTrackItem
+            {
+                MkvMergeId = GetInt(stream, "index") ?? item.Tracks.Count,
+                PropEditTrackNumber = propEditNumber++,
+                Type = type,
+                Codec = codec,
+                Language = GetString(tags, "language") ?? "und",
+                Name = GetString(tags, "title") ?? string.Empty,
+                Default = GetInt(disposition, "default") == 1,
+                Forced = GetInt(disposition, "forced") == 1
+            };
+
+            if (type.Equals("video", StringComparison.OrdinalIgnoreCase))
+            {
+                track.Resolution = GetResolution(stream);
+                track.BitDepth = GetBitDepth(stream, filePath);
+                item.Codec = DisplayValue(codec);
+                item.Resolution = DisplayValue(track.Resolution);
+                item.BitDepth = DisplayValue(track.BitDepth);
+                item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
+            }
+
+            item.Tracks.Add(track);
+        }
+
+        item.AudioSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("audio", StringComparison.OrdinalIgnoreCase)));
+        item.SubtitleSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("subtitles", StringComparison.OrdinalIgnoreCase)));
+        item.AttachmentSummary = "None";
+        item.Status = item.Tracks.Any(t => t.Type.Equals("video", StringComparison.OrdinalIgnoreCase))
+            ? "Scanned"
+            : "Scanned - no video track";
+
+        return item;
+    }
+
     public async Task ApplyMediaInfoAsync(string ffProbePath, MkvFileItem item, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(ffProbePath)) return;
         ValidateFfProbePath(ffProbePath);
-        ffProbePath = CrossPlatformRuntime.ResolveExecutable(
-            ffProbePath,
-            "ffprobe.exe",
-            "ffprobe",
-            @"C:\ffmpeg\bin\ffprobe.exe",
-            @"C:\Program Files\ffmpeg\bin\ffprobe.exe",
-            "/usr/bin/ffprobe",
-            "/usr/local/bin/ffprobe",
-            "/opt/homebrew/bin/ffprobe");
+        ffProbePath = ResolveFfProbeExecutable(ffProbePath);
 
         var result = await _runner.RunAsync(ffProbePath, new[]
         {
@@ -85,11 +154,44 @@ public sealed class FfProbeService
             throw new InvalidOperationException($"The configured ffprobe path points to '{exeName}'. Select ffprobe in Settings or ensure ffprobe is available on PATH.");
     }
 
+    private static string ResolveFfProbeExecutable(string ffProbePath)
+    {
+        return CrossPlatformRuntime.ResolveExecutable(
+            ffProbePath,
+            "ffprobe.exe",
+            "ffprobe",
+            @"C:\ffmpeg\bin\ffprobe.exe",
+            @"C:\Program Files\ffmpeg\bin\ffprobe.exe",
+            "/usr/bin/ffprobe",
+            "/usr/local/bin/ffprobe",
+            "/opt/homebrew/bin/ffprobe");
+    }
+
+    private static string NormalizeStreamType(string? type)
+    {
+        if (string.IsNullOrWhiteSpace(type)) return string.Empty;
+        return type.Equals("subtitle", StringComparison.OrdinalIgnoreCase) ? "subtitles" : type;
+    }
+
+    private static string BuildVideoSummary(string codec, string resolution, string bitDepth)
+        => string.Join(" | ", new[] { codec, resolution, bitDepth }
+            .Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals("Unknown", StringComparison.OrdinalIgnoreCase)));
+
+    private static string BuildTrackSummary(IEnumerable<MkvTrackItem> tracks)
+        => string.Join(", ", tracks
+            .GroupBy(t => string.IsNullOrWhiteSpace(t.Language) ? "und" : t.Language)
+            .Select(g => $"{g.Key} x{g.Count()}"));
+
     private static string? GetString(JsonElement element, string name)
-        => element.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+        => element.ValueKind == JsonValueKind.Object &&
+           element.TryGetProperty(name, out var v) &&
+           v.ValueKind == JsonValueKind.String
+            ? v.GetString()
+            : null;
 
     private static int? GetInt(JsonElement element, string name)
     {
+        if (element.ValueKind != JsonValueKind.Object) return null;
         if (!element.TryGetProperty(name, out var v)) return null;
         if (v.ValueKind == JsonValueKind.Number && v.TryGetInt32(out var n)) return n;
         if (v.ValueKind == JsonValueKind.String && int.TryParse(v.GetString(), out var s)) return s;

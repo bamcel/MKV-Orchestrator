@@ -9,8 +9,10 @@ var tests = new (string Name, Action Test)[]
     ("RenamePlanner sanitizes invalid and Windows-risky filename characters", RenamePlannerSanitizesFileNames),
     ("RenamePlanner blocks duplicate targets", RenamePlannerBlocksDuplicateTargets),
     ("CrossPlatformRuntime normalizes quoted and environment paths", CrossPlatformRuntimeNormalizesPaths),
+    ("CrossPlatformRuntime recognizes MP4 as readable media", CrossPlatformRuntimeRecognizesMp4Media),
     ("MkvPropEditCommandBuilder uses type ordinal selectors", MkvPropEditCommandBuilderUsesTrackSelectors),
-    ("MkvMergeService muxes multiple matching external subtitles", MkvMergeServiceMuxesMultipleMatchingExternalSubtitles)
+    ("MkvMergeService muxes multiple matching external subtitles", MkvMergeServiceMuxesMultipleMatchingExternalSubtitles),
+    ("MkvMergeService leaves MP4 files read-only", MkvMergeServiceLeavesMp4ReadOnly)
 };
 
 var failures = 0;
@@ -87,6 +89,13 @@ static void CrossPlatformRuntimeNormalizesPaths()
     {
         AssertTrue(normalized.Length > 0, "normalized path should not be empty");
     }
+}
+
+static void CrossPlatformRuntimeRecognizesMp4Media()
+{
+    AssertTrue(CrossPlatformRuntime.IsSupportedMediaPath("episode.mkv"), "MKV should be supported media");
+    AssertTrue(CrossPlatformRuntime.IsSupportedMediaPath("episode.mp4"), "MP4 should be supported media");
+    AssertTrue(!CrossPlatformRuntime.IsSupportedMediaPath("episode.avi"), "AVI should not be included in this read-only pass");
 }
 
 static void MkvPropEditCommandBuilderUsesTrackSelectors()
@@ -178,6 +187,39 @@ static void MkvMergeServiceMuxesMultipleMatchingExternalSubtitles()
             Directory.Delete(folder, recursive: true);
         }
     }
+}
+
+static void MkvMergeServiceLeavesMp4ReadOnly()
+{
+    var file = new MkvFileItem
+    {
+        FilePath = Path.Combine("media", "Episode 01.mp4"),
+        Selected = true
+    };
+
+    var plan = new MkvMergeService().BuildRemuxPlan(
+        new[] { file },
+        keepAudioLanguages: "eng,jpn",
+        keepSubtitleLanguages: "eng",
+        removeUnwantedAudioLanguages: true,
+        removeUnwantedSubtitleLanguages: true,
+        removeUnwantedTrackIds: false,
+        removeTrackIdsText: string.Empty,
+        preserveChapters: true,
+        preserveAttachments: true,
+        useSafeTempReplacement: true,
+        muxMatchingExternalSubtitles: true,
+        externalSubtitleLanguage: "eng",
+        externalSubtitleTrackName: "{tag}",
+        externalSubtitleFormats: "ass,srt",
+        preserveExternalSubtitleFiles: true,
+        skipMuxIfSubtitleAlreadyExists: true,
+        extractSubtitles: true,
+        extractSubtitleLanguages: "eng",
+        extractOverwriteExistingFiles: false);
+
+    AssertEqual(0, plan.Actions.Count);
+    AssertContains(file.FilePath, plan.NoChangeFiles);
 }
 
 static void AssertEqual<T>(T expected, T actual)

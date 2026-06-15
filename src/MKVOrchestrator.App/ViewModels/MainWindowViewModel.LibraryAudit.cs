@@ -10,6 +10,7 @@ public partial class MainWindowViewModel
     {
         SelectedLibraryAuditIssueLines.Clear();
         if (value is null) return;
+        LibraryAuditDetailSummary = value.DashboardPullSummary;
         foreach (var issue in value.Issues)
         {
             SelectedLibraryAuditIssueLines.Add(LibraryAuditIssueLine.FromText(issue));
@@ -81,8 +82,10 @@ public partial class MainWindowViewModel
                 LibraryAuditItems.Add(row);
             }
             RefreshDisplayedLibraryItems();
-            SelectedLibraryAuditItem = DisplayedLibraryAuditItems.FirstOrDefault(x => x.HasIssues) ?? DisplayedLibraryAuditItems.FirstOrDefault();
             LibraryAuditStatusText = $"Library overview ready: {result.Shows} shows, {result.SeasonFolders} folders, {result.Files} files, {result.IssueGroups} warning groups, {result.UncachedFiles} uncached files.";
+            SelectedLibraryAuditItem = null;
+            SelectedLibraryAuditIssueLines.Clear();
+            LibraryAuditDetailSummary = $"Build Overview: {result.Shows} shows | {result.SeasonFolders} folders | {result.Files} files | {result.IssueGroups} warning groups | {result.UncachedFiles} uncached files. Select a row to review warning details.";
             CompleteGlobalOperation(LibraryAuditStatusText);
             Log(LibraryAuditStatusText);
         }

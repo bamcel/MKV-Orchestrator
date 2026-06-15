@@ -49,7 +49,13 @@ public sealed class MkvFileItem : INotifyPropertyChanged
     public string Status
     {
         get => _status;
-        set => SetField(ref _status, value);
+        set
+        {
+            if (SetField(ref _status, value))
+            {
+                OnPropertyChanged(nameof(RowVisualState));
+            }
+        }
     }
 
     public bool HasTrackMismatch
@@ -70,7 +76,9 @@ public sealed class MkvFileItem : INotifyPropertyChanged
         set => SetField(ref _mismatchSummary, value);
     }
 
-    public VisualState RowVisualState => HasTrackMismatch ? VisualState.Warning : VisualState.Normal;
+    public VisualState RowVisualState => Status.Equals("Template", StringComparison.OrdinalIgnoreCase)
+        ? VisualState.Template
+        : HasTrackMismatch ? VisualState.Warning : VisualState.Normal;
 
     public VisualState ResolutionVisualState
     {

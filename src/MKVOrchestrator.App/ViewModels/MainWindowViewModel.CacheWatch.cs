@@ -184,7 +184,7 @@ public partial class MainWindowViewModel
             {
             try
             {
-                var watcher = new FileSystemWatcher(root, "*.mkv")
+                var watcher = new FileSystemWatcher(root, "*.*")
                 {
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true,
@@ -252,7 +252,7 @@ public partial class MainWindowViewModel
         try
         {
             var ignored = ParseIgnoredScanFolderNames(IgnoredScanFolderNameText).ToList();
-            foreach (var file in MkvScannerService.EnumerateMkvFiles(path, ignored, CancellationToken.None))
+            foreach (var file in MkvScannerService.EnumerateMediaFiles(path, ignored, CancellationToken.None))
             {
                 QueueWatchedFileRefresh(file);
             }
@@ -266,7 +266,7 @@ public partial class MainWindowViewModel
     private void RemoveWatchedPathFromCache(string path)
     {
         path = CrossPlatformRuntime.NormalizeUserPath(path);
-        if (CrossPlatformRuntime.IsMkvPath(path))
+        if (CrossPlatformRuntime.IsSupportedMediaPath(path))
         {
             _mediaCache.Remove(path);
         }
@@ -280,7 +280,7 @@ public partial class MainWindowViewModel
     private void QueueWatchedFileRefresh(string filePath)
     {
         filePath = CrossPlatformRuntime.NormalizeUserPath(filePath);
-        if (!CrossPlatformRuntime.IsMkvPath(filePath)) return;
+        if (!CrossPlatformRuntime.IsSupportedMediaPath(filePath)) return;
         CancellationTokenSource cts;
         lock (_watchGate)
         {

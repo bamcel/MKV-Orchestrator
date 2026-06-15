@@ -33,7 +33,7 @@ public sealed class MkvScannerService
         WorkerSettings? workers = null)
     {
         folder = CrossPlatformRuntime.NormalizeUserPath(folder);
-        var files = EnumerateMkvFiles(folder, ignoredFolderNames, token).ToArray();
+        var files = EnumerateMediaFiles(folder, ignoredFolderNames, token).ToArray();
         var totalCount = files.Length;
         var completedCount = 0;
         progress?.Report((0, totalCount));
@@ -91,11 +91,13 @@ public sealed class MkvScannerService
             if (cached is not null) return cached;
         }
 
-        var item = await _mkvMerge.IdentifyAsync(mkvMergePath, filePath, token);
+        var item = CrossPlatformRuntime.IsMp4Path(filePath)
+            ? await _ffProbe.IdentifyAsync(ffProbePath, filePath, token)
+            : await _mkvMerge.IdentifyAsync(mkvMergePath, filePath, token);
 
         // mkvmerge is fast and provides the full track layout. ffprobe is only used as a lightweight
         // video fallback for fields mkvmerge often omits, especially bit depth/pixel format details.
-        if (ShouldRunFfProbeFallback(item))
+        if (CrossPlatformRuntime.IsMkvPath(filePath) && ShouldRunFfProbeFallback(item))
         {
             try
             {
@@ -162,6 +164,13 @@ public sealed class MkvScannerService
         string rootFolder,
         IReadOnlyCollection<string>? ignoredFolderNames,
         CancellationToken token)
+        => EnumerateMediaFiles(rootFolder, ignoredFolderNames, token)
+            .Where(CrossPlatformRuntime.IsMkvPath);
+
+    public static IEnumerable<string> EnumerateMediaFiles(
+        string rootFolder,
+        IReadOnlyCollection<string>? ignoredFolderNames,
+        CancellationToken token)
     {
         var ignored = new HashSet<string>(
             (ignoredFolderNames ?? Array.Empty<string>())
@@ -180,7 +189,9 @@ public sealed class MkvScannerService
             IEnumerable<string> files;
             try
             {
-                files = Directory.EnumerateFiles(current, "*.mkv", SearchOption.TopDirectoryOnly).ToArray();
+                files = Directory.EnumerateFiles(current, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(CrossPlatformRuntime.IsSupportedMediaPath)
+                    .ToArray();
             }
             catch
             {

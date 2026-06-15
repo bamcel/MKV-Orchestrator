@@ -20,7 +20,7 @@ public sealed class LibraryAuditService
         watchRoot = CrossPlatformRuntime.NormalizeUserPath(watchRoot);
         if (string.IsNullOrWhiteSpace(watchRoot) || !Directory.Exists(watchRoot)) return new LibraryAuditResult(0, 0, 0, 0, 0);
 
-        var files = MkvScannerService.EnumerateMkvFiles(watchRoot, ignoredFolderNames, CancellationToken.None).ToList();
+        var files = MkvScannerService.EnumerateMediaFiles(watchRoot, ignoredFolderNames, CancellationToken.None).ToList();
         var uncached = 0;
         var grouped = new Dictionary<AuditGroupKey, List<MediaFile>>();
 

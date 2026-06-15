@@ -190,6 +190,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] private string selectedLibraryAuditWatchFolder = string.Empty;
     [ObservableProperty] private LibraryAuditSeasonItem? selectedLibraryAuditItem;
     [ObservableProperty] private string libraryAuditStatusText = "Select a watch folder and build the library overview.";
+    [ObservableProperty] private string libraryAuditDetailSummary = "Build an overview to see library totals here.";
     [ObservableProperty] private bool isLibraryAuditBusy;
     [ObservableProperty] private string mkvMergeDefaultAudioLanguages = "eng,jpn";
     [ObservableProperty] private string mkvMergeDefaultSubtitleLanguages = "eng";

@@ -54,6 +54,13 @@ public static class CrossPlatformRuntime
         => !string.IsNullOrWhiteSpace(path)
            && string.Equals(Path.GetExtension(path), ".mkv", StringComparison.OrdinalIgnoreCase);
 
+    public static bool IsMp4Path(string? path)
+        => !string.IsNullOrWhiteSpace(path)
+           && string.Equals(Path.GetExtension(path), ".mp4", StringComparison.OrdinalIgnoreCase);
+
+    public static bool IsSupportedMediaPath(string? path)
+        => IsMkvPath(path) || IsMp4Path(path);
+
     public static string GetToolDisplayName(string windowsName, string unixName)
         => IsWindows ? windowsName : unixName;
 

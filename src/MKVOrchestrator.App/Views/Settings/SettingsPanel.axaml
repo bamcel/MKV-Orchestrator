@@ -387,7 +387,36 @@
 <TabItem Header="About">
                   <ScrollViewer Margin="4">
                     <StackPanel Spacing="12" Margin="4">
-                      <TextBlock Text="Media operations for MKV scanning, renaming, remuxing, metadata editing, and library overview workflows." TextWrapping="Wrap" Classes="muted" />
+                      <Border Classes="panel">
+                        <StackPanel Spacing="8">
+                          <TextBlock Text="MKV Orchestrator" FontSize="20" FontWeight="SemiBold" Foreground="#F8F8F2" />
+                          <TextBlock Text="A desktop workflow tool for scanning media folders, reviewing track metadata, planning safe filename changes, and running MKV-focused maintenance tasks with preview-first execution."
+                                     TextWrapping="Wrap"
+                                     Classes="muted" />
+                        </StackPanel>
+                      </Border>
+
+                      <Border Classes="panel">
+                        <StackPanel Spacing="8">
+                          <TextBlock Text="Format Support" Classes="section-header" />
+                          <Grid ColumnDefinitions="92,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="12">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="MKV" FontWeight="SemiBold" Foreground="#BD93F9" />
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       Text="Full application workflow support: scan, inspect, rename planning, remux planning, subtitle mux/extract planning, and track property editing through MKVToolNix."
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="MP4" FontWeight="SemiBold" Foreground="#BD93F9" />
+                            <TextBlock Grid.Row="1" Grid.Column="1"
+                                       Text="Read-only integration: scan, inspect, cache, library overview, and rename planning through ffprobe metadata. MP4 files are not converted, remuxed, muxed, or property-edited by MKV Orchestrator."
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Safety" FontWeight="SemiBold" Foreground="#BD93F9" />
+                            <TextBlock Grid.Row="2" Grid.Column="1"
+                                       Text="Execution workflows are preview-first so file changes can be reviewed before applying them."
+                                       TextWrapping="Wrap" />
+                          </Grid>
+                        </StackPanel>
+                      </Border>
 
                       <Border Classes="panel">
                         <StackPanel Spacing="10">
@@ -511,7 +540,7 @@
                                 </Border>
                                 <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
                                   <TextBlock Text="FFmpeg / ffprobe" FontWeight="SemiBold" />
-                                  <TextBlock Text="Used as a fallback for media metadata analysis."
+                                  <TextBlock Text="Used for metadata analysis, including MP4 read-only inspection."
                                              TextWrapping="Wrap"
                                              Classes="muted" />
                                 </StackPanel>

@@ -107,7 +107,7 @@
         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
           <StackPanel Grid.Column="0">
             <TextBlock Text="Selection Details" Classes="section-header" />
-            <TextBlock Text="{Binding SelectedLibraryAuditItem.DashboardPullSummary}" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding LibraryAuditDetailSummary}" Classes="muted" TextWrapping="Wrap" />
           </StackPanel>
           <Button Grid.Column="1"
                   Content="Expand"
@@ -140,7 +140,7 @@
         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
           <StackPanel Grid.Column="0">
             <TextBlock Text="Selection Details" Classes="section-header" />
-            <TextBlock Text="{Binding SelectedLibraryAuditItem.DashboardPullSummary}" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding LibraryAuditDetailSummary}" Classes="muted" TextWrapping="Wrap" />
           </StackPanel>
           <Button Grid.Column="1"
                   Content="Collapse"

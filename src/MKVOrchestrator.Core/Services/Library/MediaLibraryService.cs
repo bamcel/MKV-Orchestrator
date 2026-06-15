@@ -56,7 +56,7 @@ public sealed class MediaLibraryService : IMediaLibraryService
         var allFiles = new List<string>();
         foreach (var root in watchRoots.Where(Directory.Exists))
         {
-            allFiles.AddRange(MkvScannerService.EnumerateMkvFiles(root, ignoredFolderNames, token));
+            allFiles.AddRange(MkvScannerService.EnumerateMediaFiles(root, ignoredFolderNames, token));
         }
 
         allFiles = allFiles

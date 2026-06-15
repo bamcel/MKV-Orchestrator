@@ -15,7 +15,7 @@
               <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Spacing="4">
                   <TextBox Text="{Binding FolderPath}"
-                           Watermark="Select folder(s) containing MKV files"
+                           Watermark="Select folder(s) containing MKV or MP4 files"
                            Height="36"
                            MinHeight="36"
                            TextWrapping="NoWrap"
@@ -188,7 +188,7 @@
                             RowSpacing="6"
                             ColumnSpacing="14">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Filename" Classes="muted" />
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedFile.FileName}" Foreground="White" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedFile.FileName}" Foreground="{Binding SelectedFile.RowVisualState, Converter={StaticResource VisualStateBrushConverter}, ConverterParameter=TemplateOnly}" FontWeight="SemiBold" TextWrapping="Wrap" />
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Resolution" Classes="muted" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFile.Resolution}" Foreground="{Binding SelectedFile.ResolutionVisualState, Converter={StaticResource VisualStateBrushConverter}}" />
