@@ -68,16 +68,16 @@ public sealed class FfProbeService
                 track.Resolution = GetResolution(stream);
                 track.BitDepth = GetBitDepth(stream, filePath);
                 item.Codec = CodecDisplayNormalizer.Normalize(codec);
-                item.Resolution = DisplayValue(track.Resolution);
-                item.BitDepth = DisplayValue(track.BitDepth);
-                item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
+                item.Resolution = CodecDisplayNormalizer.DisplayValue(track.Resolution);
+                item.BitDepth = CodecDisplayNormalizer.DisplayValue(track.BitDepth);
+                item.VideoSummary = CodecDisplayNormalizer.BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
             }
 
             item.Tracks.Add(track);
         }
 
-        item.AudioSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("audio", StringComparison.OrdinalIgnoreCase)));
-        item.SubtitleSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("subtitles", StringComparison.OrdinalIgnoreCase)));
+        item.AudioSummary = CodecDisplayNormalizer.BuildLanguageTrackSummary(item.Tracks.Where(t => t.Type.Equals("audio", StringComparison.OrdinalIgnoreCase)));
+        item.SubtitleSummary = CodecDisplayNormalizer.BuildLanguageTrackSummary(item.Tracks.Where(t => t.Type.Equals("subtitles", StringComparison.OrdinalIgnoreCase)));
         item.AttachmentSummary = "None";
         item.Status = item.Tracks.Any(t => t.Type.Equals("video", StringComparison.OrdinalIgnoreCase))
             ? "Scanned"
@@ -140,10 +140,9 @@ public sealed class FfProbeService
         }
 
         item.Codec = CodecDisplayNormalizer.Normalize(item.Codec);
-        item.Resolution = DisplayValue(item.Resolution);
-        item.BitDepth = DisplayValue(item.BitDepth);
-        item.VideoSummary = string.Join(" | ", new[] { item.Codec, item.Resolution, item.BitDepth }
-            .Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals("Unknown", StringComparison.OrdinalIgnoreCase)));
+        item.Resolution = CodecDisplayNormalizer.DisplayValue(item.Resolution);
+        item.BitDepth = CodecDisplayNormalizer.DisplayValue(item.BitDepth);
+        item.VideoSummary = CodecDisplayNormalizer.BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
     }
 
     private static void ValidateFfProbePath(string ffProbePath)
@@ -173,15 +172,6 @@ public sealed class FfProbeService
         if (string.IsNullOrWhiteSpace(type)) return string.Empty;
         return type.Equals("subtitle", StringComparison.OrdinalIgnoreCase) ? "subtitles" : type;
     }
-
-    private static string BuildVideoSummary(string codec, string resolution, string bitDepth)
-        => string.Join(" | ", new[] { codec, resolution, bitDepth }
-            .Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals("Unknown", StringComparison.OrdinalIgnoreCase)));
-
-    private static string BuildTrackSummary(IEnumerable<MkvTrackItem> tracks)
-        => string.Join(", ", tracks
-            .GroupBy(t => string.IsNullOrWhiteSpace(t.Language) ? "und" : t.Language)
-            .Select(g => $"{g.Key} x{g.Count()}"));
 
     private static string? GetString(JsonElement element, string name)
         => element.ValueKind == JsonValueKind.Object &&
@@ -223,6 +213,4 @@ public sealed class FfProbeService
         return string.Empty;
     }
 
-    private static string DisplayValue(string? value)
-        => string.IsNullOrWhiteSpace(value) ? "Unknown" : value.Trim();
 }

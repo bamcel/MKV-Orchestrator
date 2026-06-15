@@ -163,13 +163,6 @@ public sealed class MkvScannerService
         return Math.Min(fileCount, configured);
     }
 
-    public static IEnumerable<string> EnumerateMkvFiles(
-        string rootFolder,
-        IReadOnlyCollection<string>? ignoredFolderNames,
-        CancellationToken token)
-        => EnumerateMediaFiles(rootFolder, ignoredFolderNames, token)
-            .Where(CrossPlatformRuntime.IsMkvPath);
-
     public static IEnumerable<string> EnumerateMediaFiles(
         string rootFolder,
         IReadOnlyCollection<string>? ignoredFolderNames,

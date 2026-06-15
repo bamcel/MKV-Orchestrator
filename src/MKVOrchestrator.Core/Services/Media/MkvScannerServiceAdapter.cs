@@ -5,7 +5,7 @@ using MKVOrchestrator.Core.Services.Library;
 namespace MKVOrchestrator.Core.Services;
 
 /// <summary>
-/// IMediaScannerService adapter that exposes the existing mkvmerge scanner through the canonical MediaFile model.
+/// IMediaScannerService adapter that exposes the media scanner through the canonical MediaFile model.
 /// </summary>
 public sealed class MkvScannerServiceAdapter : IMediaScannerService
 {

@@ -370,11 +370,11 @@
                           <TextBox Classes="settingsConsoleBox" Text="{Binding WatchFolderText}" AcceptsReturn="True" Height="120" VerticalContentAlignment="Top" TextWrapping="Wrap" Watermark="/anime&#x0a;/movies&#x0a;//THEHUCKLEBERRY/downloads/anime" />
                           <CheckBox Content="Enable live watch folder monitoring" IsChecked="{Binding EnableLiveWatchFolderMonitoring}" />
                           <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button Content="Build cache from watch folders" Command="{Binding BuildCacheFromWatchFoldersCommand}" />
-                            <Button Content="Cancel cache build" Command="{Binding CancelCommand}" IsEnabled="{Binding IsCacheBusy}" />
-                            <Button Content="Clear cache database" Command="{Binding ClearMetadataCacheCommand}" />
-                            <Button Content="Clear temp cache" Command="{Binding ClearTempMetadataCacheCommand}" />
-                            <Button Content="Restart watcher" Command="{Binding RestartMetadataWatchersCommand}" />
+                            <Button Content="Build Library Cache" Command="{Binding BuildCacheFromWatchFoldersCommand}" />
+                            <Button Content="Cancel Build" Command="{Binding CancelCommand}" IsEnabled="{Binding IsCacheBusy}" />
+                            <Button Content="Clear Library Cache" Command="{Binding ClearMetadataCacheCommand}" />
+                            <Button Content="Clear Temporary Cache" Command="{Binding ClearTempMetadataCacheCommand}" />
+                            <Button Content="Restart Watcher" Command="{Binding RestartMetadataWatchersCommand}" />
                           </StackPanel>
                           <ProgressBar IsIndeterminate="{Binding IsCacheBusy}" Height="8" />
                           <TextBlock Text="{Binding CacheStatusText}" TextWrapping="Wrap" Classes="muted" />

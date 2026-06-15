@@ -96,9 +96,9 @@ public sealed class MkvMergeService
                 t.Resolution = GetResolution(props);
                 t.BitDepth = GetBitDepth(props, t.Codec, filePath);
                 item.Codec = CodecDisplayNormalizer.Normalize(t.Codec);
-                item.Resolution = DisplayValue(t.Resolution);
-                item.BitDepth = DisplayValue(t.BitDepth);
-                item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
+                item.Resolution = CodecDisplayNormalizer.DisplayValue(t.Resolution);
+                item.BitDepth = CodecDisplayNormalizer.DisplayValue(t.BitDepth);
+                item.VideoSummary = CodecDisplayNormalizer.BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
             }
         }
 
@@ -122,8 +122,8 @@ public sealed class MkvMergeService
             }
         }
 
-        item.AudioSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("audio", StringComparison.OrdinalIgnoreCase)));
-        item.SubtitleSummary = BuildTrackSummary(item.Tracks.Where(t => t.Type.Equals("subtitles", StringComparison.OrdinalIgnoreCase)));
+        item.AudioSummary = CodecDisplayNormalizer.BuildLanguageTrackSummary(item.Tracks.Where(t => t.Type.Equals("audio", StringComparison.OrdinalIgnoreCase)));
+        item.SubtitleSummary = CodecDisplayNormalizer.BuildLanguageTrackSummary(item.Tracks.Where(t => t.Type.Equals("subtitles", StringComparison.OrdinalIgnoreCase)));
         item.AttachmentSummary = BuildAttachmentSummary(item.Attachments);
         item.Status = item.Tracks.Any(t => t.Type.Equals("video", StringComparison.OrdinalIgnoreCase))
             ? "Scanned"
@@ -179,9 +179,6 @@ public sealed class MkvMergeService
         }
     }
 
-    private static string BuildTrackSummary(IEnumerable<MkvTrackItem> tracks)
-        => string.Join(", ", tracks.GroupBy(t => string.IsNullOrWhiteSpace(t.Language) ? "und" : t.Language).Select(g => $"{g.Key} x{g.Count()}"));
-
     private static string BuildAttachmentSummary(IEnumerable<MkvAttachmentItem> attachments)
     {
         var items = attachments.ToList();
@@ -203,12 +200,6 @@ public sealed class MkvMergeService
             || text.EndsWith(".otf", StringComparison.OrdinalIgnoreCase)
             || text.EndsWith(".ttc", StringComparison.OrdinalIgnoreCase);
     }
-
-    private static string BuildVideoSummary(string codec, string resolution, string bitDepth)
-        => string.Join(" | ", new[] { codec, resolution, bitDepth }.Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals("Unknown", StringComparison.OrdinalIgnoreCase)));
-
-    private static string DisplayValue(string? value)
-        => string.IsNullOrWhiteSpace(value) ? "Unknown" : value.Trim();
 
     private static string? GetString(JsonElement props, string name)
         => props.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;

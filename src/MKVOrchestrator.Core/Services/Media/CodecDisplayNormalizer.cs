@@ -1,3 +1,5 @@
+using MKVOrchestrator.Core.Models;
+
 namespace MKVOrchestrator.Core.Services;
 
 public static class CodecDisplayNormalizer
@@ -25,6 +27,18 @@ public static class CodecDisplayNormalizer
 
         return clean;
     }
+
+    public static string DisplayValue(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "Unknown" : value.Trim();
+
+    public static string BuildVideoSummary(string codec, string resolution, string bitDepth)
+        => string.Join(" | ", new[] { codec, resolution, bitDepth }
+            .Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals("Unknown", StringComparison.OrdinalIgnoreCase)));
+
+    public static string BuildLanguageTrackSummary(IEnumerable<MkvTrackItem> tracks)
+        => string.Join(", ", tracks
+            .GroupBy(t => string.IsNullOrWhiteSpace(t.Language) ? "und" : t.Language)
+            .Select(g => $"{g.Key} x{g.Count()}"));
 
     private static bool ContainsAny(string value, params string[] candidates)
         => candidates.Any(candidate => value.Contains(candidate, StringComparison.OrdinalIgnoreCase));

@@ -10,7 +10,7 @@ MKVO now uses a service-oriented internal architecture with a canonical `MediaFi
 - `../MKVOrchestrator.Core/Services/Media/MediaFileMapper.cs` - single projection boundary between `MediaFile` and `MkvFileItem`.
 - `../MKVOrchestrator.Core/Services/Library/MediaServiceContracts.cs` - interfaces for scanner, cache, and media library orchestration.
 - `../MKVOrchestrator.Core/Services/Library/MediaLibraryService.cs` - coordinates scanning, cache validation, and watch-folder cache builds.
-- `../MKVOrchestrator.Core/Services/Media/MkvScannerServiceAdapter.cs` - exposes the existing mkvmerge scanner through the canonical model.
+- `../MKVOrchestrator.Core/Services/Media/MkvScannerServiceAdapter.cs` - exposes media scanning through the canonical model.
 - `../MKVOrchestrator.Core/Services/Cache/MetadataCacheServiceAdapter.cs` - exposes SQLite cache through the cache service interface.
 - `../MKVOrchestrator.Core/Services/Pipeline/ScanPipeline.cs` - dashboard scan coordinator; now consumes `IMediaLibraryService`.
 - `../MKVOrchestrator.Core/Services/State/AppStateService.cs` - shared UI state only; business logic should remain in services.
