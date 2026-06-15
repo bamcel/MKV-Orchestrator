@@ -10,7 +10,7 @@ public sealed class VisualStateBrushConverter : IValueConverter
 {
     public IBrush NormalBrush { get; set; } = Brushes.White;
     public IBrush WarningBrush { get; set; } = Brushes.Orange;
-    public IBrush TemplateBrush { get; set; } = Brush.Parse("#BD93F9");
+    public IBrush TemplateBrush { get; set; } = Brush.Parse("#CFCFEA");
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

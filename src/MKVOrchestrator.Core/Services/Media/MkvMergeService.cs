@@ -92,9 +92,10 @@ public sealed class MkvMergeService
 
             if (type.Equals("video", StringComparison.OrdinalIgnoreCase))
             {
+                t.Codec = CodecDisplayNormalizer.Normalize(t.Codec);
                 t.Resolution = GetResolution(props);
                 t.BitDepth = GetBitDepth(props, t.Codec, filePath);
-                item.Codec = DisplayValue(t.Codec);
+                item.Codec = CodecDisplayNormalizer.Normalize(t.Codec);
                 item.Resolution = DisplayValue(t.Resolution);
                 item.BitDepth = DisplayValue(t.BitDepth);
                 item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);

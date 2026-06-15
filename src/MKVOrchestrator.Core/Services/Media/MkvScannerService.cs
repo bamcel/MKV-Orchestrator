@@ -91,7 +91,7 @@ public sealed class MkvScannerService
             if (cached is not null) return cached;
         }
 
-        var item = CrossPlatformRuntime.IsMp4Path(filePath)
+        var item = GetPrimaryMetadataReaderName(filePath) == "ffprobe"
             ? await _ffProbe.IdentifyAsync(ffProbePath, filePath, token)
             : await _mkvMerge.IdentifyAsync(mkvMergePath, filePath, token);
 
@@ -123,6 +123,9 @@ public sealed class MkvScannerService
             || IsMissing(item.Resolution)
             || IsMissing(item.BitDepth);
     }
+
+    public static string GetPrimaryMetadataReaderName(string filePath)
+        => CrossPlatformRuntime.IsMp4Path(filePath) ? "ffprobe" : "mkvmerge";
 
     private static bool IsMissing(string? value)
     {

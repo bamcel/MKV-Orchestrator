@@ -48,7 +48,7 @@ public sealed class MediaInfoService
                 var resolution = BuildResolution(width, height);
                 var bitDepth = NormalizeBitDepth(FirstNonBlank(GetString(track, "BitDepth"), GetString(track, "BitDepth/String"), GetString(track, "BitDepth_String")));
 
-                item.Codec = DisplayValue(codec);
+                item.Codec = CodecDisplayNormalizer.Normalize(codec);
                 if (!string.IsNullOrWhiteSpace(resolution)) item.Resolution = resolution;
                 if (!string.IsNullOrWhiteSpace(bitDepth)) item.BitDepth = bitDepth;
                 item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
@@ -56,7 +56,7 @@ public sealed class MediaInfoService
                 var videoTrack = item.Tracks.Where(t => t.Type.Equals("video", StringComparison.OrdinalIgnoreCase)).Skip(videoIndex).FirstOrDefault();
                 if (videoTrack is not null)
                 {
-                    videoTrack.Codec = DisplayValue(codec);
+                    videoTrack.Codec = CodecDisplayNormalizer.Normalize(codec);
                     if (!string.IsNullOrWhiteSpace(resolution)) videoTrack.Resolution = resolution;
                     if (!string.IsNullOrWhiteSpace(bitDepth)) videoTrack.BitDepth = bitDepth;
                     var title = GetString(track, "Title");

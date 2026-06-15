@@ -64,9 +64,10 @@ public sealed class FfProbeService
 
             if (type.Equals("video", StringComparison.OrdinalIgnoreCase))
             {
+                track.Codec = CodecDisplayNormalizer.Normalize(track.Codec);
                 track.Resolution = GetResolution(stream);
                 track.BitDepth = GetBitDepth(stream, filePath);
-                item.Codec = DisplayValue(codec);
+                item.Codec = CodecDisplayNormalizer.Normalize(codec);
                 item.Resolution = DisplayValue(track.Resolution);
                 item.BitDepth = DisplayValue(track.BitDepth);
                 item.VideoSummary = BuildVideoSummary(item.Codec, item.Resolution, item.BitDepth);
@@ -124,21 +125,21 @@ public sealed class FfProbeService
                 var resolution = GetResolution(stream);
                 var bitDepth = GetBitDepth(stream, item.FilePath);
 
-                if (!string.IsNullOrWhiteSpace(codec)) item.Codec = codec;
+                if (!string.IsNullOrWhiteSpace(codec)) item.Codec = CodecDisplayNormalizer.Normalize(codec);
                 if (!string.IsNullOrWhiteSpace(resolution)) item.Resolution = resolution;
                 if (!string.IsNullOrWhiteSpace(bitDepth)) item.BitDepth = bitDepth;
 
                 var videoTrack = item.Tracks.FirstOrDefault(t => t.Type.Equals("video", StringComparison.OrdinalIgnoreCase));
                 if (videoTrack is not null)
                 {
-                    if (!string.IsNullOrWhiteSpace(codec)) videoTrack.Codec = codec;
+                    if (!string.IsNullOrWhiteSpace(codec)) videoTrack.Codec = CodecDisplayNormalizer.Normalize(codec);
                     if (!string.IsNullOrWhiteSpace(resolution)) videoTrack.Resolution = resolution;
                     if (!string.IsNullOrWhiteSpace(bitDepth)) videoTrack.BitDepth = bitDepth;
                 }
             }
         }
 
-        item.Codec = DisplayValue(item.Codec);
+        item.Codec = CodecDisplayNormalizer.Normalize(item.Codec);
         item.Resolution = DisplayValue(item.Resolution);
         item.BitDepth = DisplayValue(item.BitDepth);
         item.VideoSummary = string.Join(" | ", new[] { item.Codec, item.Resolution, item.BitDepth }

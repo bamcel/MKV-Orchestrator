@@ -10,6 +10,8 @@ var tests = new (string Name, Action Test)[]
     ("RenamePlanner blocks duplicate targets", RenamePlannerBlocksDuplicateTargets),
     ("CrossPlatformRuntime normalizes quoted and environment paths", CrossPlatformRuntimeNormalizesPaths),
     ("CrossPlatformRuntime recognizes MP4 as readable media", CrossPlatformRuntimeRecognizesMp4Media),
+    ("CodecDisplayNormalizer normalizes common video aliases", CodecDisplayNormalizerNormalizesCommonVideoAliases),
+    ("MkvScannerService routes MKV metadata through mkvmerge first", MkvScannerServiceRoutesMkvThroughMkvMergeFirst),
     ("MkvPropEditCommandBuilder uses type ordinal selectors", MkvPropEditCommandBuilderUsesTrackSelectors),
     ("MkvMergeService muxes multiple matching external subtitles", MkvMergeServiceMuxesMultipleMatchingExternalSubtitles),
     ("MkvMergeService leaves MP4 files read-only", MkvMergeServiceLeavesMp4ReadOnly)
@@ -96,6 +98,23 @@ static void CrossPlatformRuntimeRecognizesMp4Media()
     AssertTrue(CrossPlatformRuntime.IsSupportedMediaPath("episode.mkv"), "MKV should be supported media");
     AssertTrue(CrossPlatformRuntime.IsSupportedMediaPath("episode.mp4"), "MP4 should be supported media");
     AssertTrue(!CrossPlatformRuntime.IsSupportedMediaPath("episode.avi"), "AVI should not be included in this read-only pass");
+}
+
+static void CodecDisplayNormalizerNormalizesCommonVideoAliases()
+{
+    AssertEqual("HEVC/H.265", CodecDisplayNormalizer.Normalize("hevc"));
+    AssertEqual("HEVC/H.265", CodecDisplayNormalizer.Normalize("HEVC/H.265/MPEG-H"));
+    AssertEqual("AVC/H.264", CodecDisplayNormalizer.Normalize("h264"));
+    AssertEqual("AVC/H.264", CodecDisplayNormalizer.Normalize("AVC/H.264"));
+    AssertEqual("AV1", CodecDisplayNormalizer.Normalize("av1"));
+}
+
+static void MkvScannerServiceRoutesMkvThroughMkvMergeFirst()
+{
+    AssertEqual("mkvmerge", MkvScannerService.GetPrimaryMetadataReaderName("Episode 01.mkv"));
+    AssertEqual("mkvmerge", MkvScannerService.GetPrimaryMetadataReaderName("Episode 01.MKV"));
+    AssertEqual("ffprobe", MkvScannerService.GetPrimaryMetadataReaderName("Episode 01.mp4"));
+    AssertEqual("ffprobe", MkvScannerService.GetPrimaryMetadataReaderName("Episode 01.MP4"));
 }
 
 static void MkvPropEditCommandBuilderUsesTrackSelectors()
