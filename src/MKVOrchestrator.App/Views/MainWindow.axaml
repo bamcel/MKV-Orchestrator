@@ -11,8 +11,38 @@
         x:DataType="vm:MainWindowViewModel"
         Width="1500" Height="900"
         MinWidth="1150" MinHeight="720"
+        SystemDecorations="None"
         Title="MKV Orchestrator">
-  <Grid ColumnDefinitions="236,*" Margin="10" ColumnSpacing="12">
+  <Grid RowDefinitions="36,*">
+    <Border Grid.Row="0"
+            Background="{DynamicResource ThemeWindowBackgroundBrush}"
+            BorderBrush="{DynamicResource ThemeBorderBrush}"
+            BorderThickness="0,0,0,1"
+            PointerPressed="TitleBar_PointerPressed">
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="10,0,0,0">
+        <TextBlock Grid.Column="0"
+                   Text="MKV Orchestrator"
+                   Classes="muted"
+                   FontSize="12"
+                   VerticalAlignment="Center" />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0">
+          <Button Classes="window-chrome-button"
+                  Click="MinimizeButton_Click">
+            <TextBlock Text="&#xE921;" Classes="window-chrome-icon" />
+          </Button>
+          <Button Classes="window-chrome-button"
+                  Click="MaximizeButton_Click">
+            <TextBlock Text="&#xE922;" Classes="window-chrome-icon" />
+          </Button>
+          <Button Classes="window-chrome-button close"
+                  Click="CloseButton_Click">
+            <TextBlock Text="&#xE8BB;" Classes="window-chrome-icon" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+  <Grid Grid.Row="1" ColumnDefinitions="236,*" Margin="10" ColumnSpacing="12">
     <Border Grid.Column="0" Classes="sidebar">
       <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,14">
@@ -116,5 +146,6 @@
         </Border>
       </Grid>
     </Grid>
+  </Grid>
   </Grid>
 </Window>

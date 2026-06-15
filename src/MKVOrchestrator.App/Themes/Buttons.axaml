@@ -42,6 +42,48 @@
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeButtonBackgroundBrush}" />
   </Style>
 
+  <Style Selector="Button.window-chrome-button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="46" />
+    <Setter Property="Width" Value="46" />
+    <Setter Property="Height" Value="36" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="TextBlock.window-chrome-icon">
+    <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="LineHeight" Value="10" />
+    <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.window-chrome-button:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ThemeButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+  </Style>
+
+  <Style Selector="Button.window-chrome-button:pointerover TextBlock.window-chrome-icon">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+  </Style>
+
+  <Style Selector="Button.window-chrome-button.close:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ThemeWarningBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ThemeWindowBackgroundBrush}" />
+  </Style>
+
+  <Style Selector="Button.window-chrome-button.close:pointerover TextBlock.window-chrome-icon">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeWindowBackgroundBrush}" />
+  </Style>
+
   <Style Selector="RadioButton.nav-item">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />

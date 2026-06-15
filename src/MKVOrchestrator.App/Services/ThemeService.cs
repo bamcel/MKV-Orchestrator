@@ -115,6 +115,9 @@ public static class ThemeService
         SetAlias("SystemControlForegroundChromeHighBrush", "Text");
         SetAlias("SystemControlForegroundChromeBlackHighBrush", "Text");
         SetAlias("SystemControlForegroundChromeWhiteBrush", "Text");
+        SetAlias("TextControlPlaceholderForeground", "SubtleText");
+        SetAlias("TextControlPlaceholderForegroundPointerOver", "MutedText");
+        SetAlias("TextControlPlaceholderForegroundFocused", "MutedText");
         SetAlias("SystemControlHighlightAltBaseHighBrush", "Text");
         SetAlias("SystemControlHighlightAltBaseMediumHighBrush", "Text");
         SetAlias("SystemControlHighlightAltBaseMediumLowBrush", "Text");

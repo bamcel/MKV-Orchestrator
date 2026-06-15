@@ -38,7 +38,7 @@
                       <TextBlock DockPanel.Dock="Top" Text="MKVToolNix Paths" Classes="section-header" />
                       <Grid ColumnDefinitions="170,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="8">
                           <TextBlock Grid.Row="0" Grid.Column="0" Text="MKVToolNix folder" VerticalAlignment="Center" />
-                          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MkvToolNixDirectory}" Watermark="C:\Program Files\MKVToolNix" />
+                          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MkvToolNixDirectory}" Watermark="full path to MKVToolNix" />
                           <Button Grid.Row="0" Grid.Column="2" Content="Browse" Command="{Binding BrowseMkvToolNixDirectoryCommand}" CommandParameter="{Binding $parent[Window]}" />
                           <Button Grid.Row="0" Grid.Column="3" Content="Auto Find" Command="{Binding AutoFindMkvToolNixDirectoryCommand}" />
 
@@ -81,7 +81,7 @@
                       <TextBlock DockPanel.Dock="Top" Text="FFprobe Path" Classes="section-header" />
                       <Grid ColumnDefinitions="170,*,Auto" RowDefinitions="Auto" RowSpacing="8" ColumnSpacing="8">
                           <TextBlock Grid.Row="0" Grid.Column="0" Text="ffprobe.exe" VerticalAlignment="Center" />
-                          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FfProbePath}" Watermark="ffprobe or full path to ffprobe.exe" />
+                          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FfProbePath}" Watermark="full path to ffprobe.exe" />
                           <Button Grid.Row="0" Grid.Column="2" Content="Browse" Command="{Binding BrowseFfProbeCommand}" CommandParameter="{Binding $parent[Window]}" />
                         </Grid>
                     </DockPanel>
@@ -411,7 +411,7 @@
                         <StackPanel Spacing="8">
                           <TextBlock Text="Watch Folders" Classes="section-header" />
                       <TextBlock Text="Enter one root folder per line. For a root like /anime, the cache builder recursively scans nested layouts such as /anime/anime_series/show/season01/show.mkv and /anime/anime_movies/movie/movie.mkv." TextWrapping="Wrap" Classes="muted" />
-                          <TextBox Classes="settingsConsoleBox" Text="{Binding WatchFolderText}" AcceptsReturn="True" Height="120" VerticalContentAlignment="Top" TextWrapping="Wrap" Watermark="/anime&#x0a;/movies&#x0a;//THEHUCKLEBERRY/downloads/anime" />
+                          <TextBox Classes="settingsConsoleBox" Text="{Binding WatchFolderText}" AcceptsReturn="True" Height="120" VerticalContentAlignment="Top" TextWrapping="Wrap" Watermark="user/path/movies, user/path/tv, //server_name/share/tv" />
                           <CheckBox Content="Enable live watch folder monitoring" IsChecked="{Binding EnableLiveWatchFolderMonitoring}" />
                           <StackPanel Orientation="Horizontal" Spacing="8">
                             <Button Content="Build Library Cache" Command="{Binding BuildCacheFromWatchFoldersCommand}" />

@@ -60,6 +60,9 @@
 <SolidColorBrush x:Key="SystemControlForegroundChromeHighBrush" Color="#F8F8F2"/>
 <SolidColorBrush x:Key="SystemControlForegroundChromeBlackHighBrush" Color="#F8F8F2"/>
 <SolidColorBrush x:Key="SystemControlForegroundChromeWhiteBrush" Color="#F8F8F2"/>
+<SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#8B93A7"/>
+<SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#CFCFEA"/>
+<SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#CFCFEA"/>
 <SolidColorBrush x:Key="SystemControlHighlightAltBaseHighBrush" Color="#F8F8F2"/>
 <SolidColorBrush x:Key="SystemControlHighlightAltBaseMediumHighBrush" Color="#F8F8F2"/>
 <SolidColorBrush x:Key="SystemControlHighlightAltBaseMediumLowBrush" Color="#F8F8F2"/>

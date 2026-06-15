@@ -44,6 +44,22 @@
     <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
   </Style>
 
+  <Style Selector="TextBox /template/ TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeSubtleTextBrush}" />
+  </Style>
+
+  <Style Selector="TextBox:pointerover /template/ TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
+  </Style>
+
+  <Style Selector="TextBox:focus /template/ TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
+  </Style>
+
+  <Style Selector="TextBox:focus-within /template/ TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
+  </Style>
+
   <Style Selector="TextBox /template/ Border">
     <Setter Property="Background" Value="{DynamicResource ThemeInputBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeButtonBackgroundBrush}" />
