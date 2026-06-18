@@ -16,6 +16,7 @@ public sealed class AppSettings
     public string TmdbApiKey { get; set; } = string.Empty;
     public string RenameLookupProvider { get; set; } = "TVDB";
     public string RenameTemplate { get; set; } = "{series} - S{season:00}E{episode:00} - {episodeTitle}";
+    public bool RenamePreviewCompactView { get; set; }
     public List<string> RenameTemplates { get; set; } = new()
     {
         "{title}",

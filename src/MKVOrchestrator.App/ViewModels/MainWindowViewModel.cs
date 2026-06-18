@@ -117,6 +117,7 @@ public partial class MainWindowViewModel : ObservableObject
     public bool IsTmdbConfigured => !string.IsNullOrWhiteSpace(TmdbApiKey);
     public bool IsSelectedRenameProviderConfigured => IsRenameProviderConfigured(RenameLookupProvider);
     public IBrush PreviewButtonForeground => IsRenamePreviewDirty ? Brushes.Orange : Brushes.White;
+    public string RenamePreviewViewButtonText => IsRenamePreviewCompactView ? "Detailed View" : "Compact View";
 
     public ObservableCollection<string> TvdbLanguageOptions { get; } = new()
     {
@@ -140,6 +141,12 @@ public partial class MainWindowViewModel : ObservableObject
     partial void OnIsRenamePreviewDirtyChanged(bool value)
     {
         OnPropertyChanged(nameof(PreviewButtonForeground));
+    }
+
+    partial void OnIsRenamePreviewCompactViewChanged(bool value)
+    {
+        OnPropertyChanged(nameof(RenamePreviewViewButtonText));
+        SaveSettingsIfReady();
     }
 
     private void OnDashboardFilesChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -215,6 +222,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] private TvdbSeriesSearchResult? selectedTvdbSeries;
     [ObservableProperty] private string renameStatusText = "Ready";
     [ObservableProperty] private bool isRenamePreviewDirty;
+    [ObservableProperty] private bool isRenamePreviewCompactView;
 
     [ObservableProperty] private string episodeScopeSummary = string.Empty;
 
@@ -289,6 +297,12 @@ public partial class MainWindowViewModel : ObservableObject
     private void ToggleRenameSummaryExpanded()
     {
         IsRenameSummaryExpanded = !IsRenameSummaryExpanded;
+    }
+
+    [RelayCommand]
+    private void ToggleRenamePreviewView()
+    {
+        IsRenamePreviewCompactView = !IsRenamePreviewCompactView;
     }
 
     [RelayCommand]

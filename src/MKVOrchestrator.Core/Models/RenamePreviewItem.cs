@@ -12,6 +12,7 @@ public sealed class RenamePreviewItem : INotifyPropertyChanged
     private string _matchedEpisodeTitle = string.Empty;
     private string _confidence = "Pending";
     private string _status = "Awaiting match";
+    private bool _isMovieMatch;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -30,10 +31,41 @@ public sealed class RenamePreviewItem : INotifyPropertyChanged
         }
     }
     public string CurrentFileName => Path.GetFileName(FilePath);
-    public int? Season { get => MediaFile.Season; set => MediaFile.Season = value; }
-    public int? Episode { get => MediaFile.Episode; set => MediaFile.Episode = value; }
+    public int? Season
+    {
+        get => MediaFile.Season;
+        set
+        {
+            if (MediaFile.Season == value) return;
+            MediaFile.Season = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DetectedEpisode));
+        }
+    }
+    public int? Episode
+    {
+        get => MediaFile.Episode;
+        set
+        {
+            if (MediaFile.Episode == value) return;
+            MediaFile.Episode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DetectedEpisode));
+        }
+    }
     public int? AbsoluteEpisode { get => MediaFile.AbsoluteEpisode; set => MediaFile.AbsoluteEpisode = value; }
-    public string DetectedEpisode => Season.HasValue && Episode.HasValue ? $"S{Season.Value:00}E{Episode.Value:00}" : "Unknown";
+    public bool IsMovieMatch
+    {
+        get => _isMovieMatch;
+        set
+        {
+            if (_isMovieMatch == value) return;
+            _isMovieMatch = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DetectedEpisode));
+        }
+    }
+    public string DetectedEpisode => IsMovieMatch ? "Movie" : Season.HasValue && Episode.HasValue ? $"S{Season.Value:00}E{Episode.Value:00}" : "Unknown";
     public string SeriesTitle { get => MediaFile.SeriesTitle; set => MediaFile.SeriesTitle = value; }
     public int? SeriesYear { get; set; }
     public int? TvdbEpisodeId { get => MediaFile.ProviderMatch.EpisodeId; set => MediaFile.ProviderMatch.EpisodeId = value; }

@@ -40,6 +40,7 @@ public partial class MainWindowViewModel
         TvdbLanguage = string.IsNullOrWhiteSpace(settings.TvdbLanguage) ? "eng" : settings.TvdbLanguage.Trim();
         RenameLookupProvider = string.IsNullOrWhiteSpace(settings.RenameLookupProvider) ? "TVDB" : NormalizeLookupProvider(settings.RenameLookupProvider);
         RenameTemplate = string.IsNullOrWhiteSpace(settings.RenameTemplate) ? DefaultRenameTemplates()[0] : settings.RenameTemplate.Trim();
+        IsRenamePreviewCompactView = settings.RenamePreviewCompactView;
         ReplaceCollection(RenameTemplateOptions, BuildRenameTemplateList(settings.RenameTemplates, RenameTemplate));
         RefreshDisplayedRenameTemplateOptions();
         SelectedRenameTemplateOption = RenameTemplateOptions.FirstOrDefault(x => string.Equals(x, RenameTemplate, StringComparison.OrdinalIgnoreCase)) ?? RenameTemplateOptions.FirstOrDefault() ?? string.Empty;
@@ -211,6 +212,7 @@ Log($"Settings loaded from {_settingsService.SettingsPath}");
             TvdbLanguage = string.IsNullOrWhiteSpace(TvdbLanguage) ? "eng" : TvdbLanguage.Trim(),
             RenameLookupProvider = NormalizeLookupProvider(RenameLookupProvider),
             RenameTemplate = string.IsNullOrWhiteSpace(RenameTemplate) ? DefaultRenameTemplates()[0] : ToStoredRenameTemplate(RenameTemplate),
+            RenamePreviewCompactView = IsRenamePreviewCompactView,
             RenameTemplates = BuildRenameTemplateList(RenameTemplateOptions, ToStoredRenameTemplate(RenameTemplate)).ToList(),
             IgnoredScanFolderNames = ParseIgnoredScanFolderNames(IgnoredScanFolderNameText).ToList(),
             AudioNamePresets = AudioNamePresets.ToList(),

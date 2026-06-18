@@ -210,6 +210,7 @@ public partial class MainWindowViewModel
 
             foreach (var item in RenameItems.OrderBy(i => i.Season ?? int.MaxValue).ThenBy(i => i.Episode ?? int.MaxValue).ThenBy(i => i.CurrentFileName, StringComparer.OrdinalIgnoreCase))
             {
+                item.IsMovieMatch = isMovie;
                 TvdbEpisode? episode = null;
                 var exactMatch = false;
 
