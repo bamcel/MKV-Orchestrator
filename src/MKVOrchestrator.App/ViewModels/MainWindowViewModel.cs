@@ -42,6 +42,7 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly AppSettingsService _settingsService = new();
     private readonly ExecutionQueueService _executionQueue = new();
     private readonly FileConflictService _fileConflict = new();
+    private readonly RenameBatchHistoryService _renameBatchHistory = new();
     private readonly Dictionary<string, IRenameMetadataProvider> _renameMetadataProviders = new(StringComparer.OrdinalIgnoreCase)
     {
         ["TVDB"] = new TvdbRenameMetadataProvider(),
@@ -111,6 +112,7 @@ public partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<ExecutionJob> ExecutionJobs => _executionQueue.Jobs;
     public ObservableCollection<string> ExecutionSummaryLines { get; } = new();
     public Action<string, IReadOnlyList<string>>? ShowOutputWindow { get; set; }
+    public Func<IReadOnlyList<RenameBatchRecord>, Action, Func<RenameBatchRecord, RenameBatchUndoPreview>, Func<RenameBatchRecord, Task<RenameBatchUndoResult>>, Task>? ShowRenameUndoWindowAsync { get; set; }
     public ObservableCollection<string> RenameTemplateOptions { get; } = new();
     public ObservableCollection<string> DisplayedRenameTemplateOptions { get; } = new();
     public bool IsTvdbConfigured => !string.IsNullOrWhiteSpace(TvdbApiKey);
@@ -303,6 +305,25 @@ public partial class MainWindowViewModel : ObservableObject
     private void ToggleRenamePreviewView()
     {
         IsRenamePreviewCompactView = !IsRenamePreviewCompactView;
+    }
+
+    [RelayCommand]
+    private async Task OpenRenameUndoBatch()
+    {
+        if (ShowRenameUndoWindowAsync is null)
+        {
+            RenameLog("Undo Batch window is not available.");
+            return;
+        }
+
+        var batches = _renameBatchHistory.Load();
+        await ShowRenameUndoWindowAsync(batches, ClearRenameBatchHistory, PreviewRenameBatchUndo, UndoRenameBatchAsync);
+    }
+
+    private void ClearRenameBatchHistory()
+    {
+        _renameBatchHistory.Clear();
+        RenameLog("Cleared rename undo batch history.");
     }
 
     [RelayCommand]

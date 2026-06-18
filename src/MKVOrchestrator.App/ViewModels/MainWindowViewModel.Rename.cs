@@ -814,6 +814,7 @@ public partial class MainWindowViewModel
 
         var renamed = 0;
         var skipped = 0;
+        var batchEntries = new List<RenameBatchEntry>();
 
         foreach (var item in selected)
         {
@@ -876,6 +877,11 @@ public partial class MainWindowViewModel
                 item.FilePath = targetPath;
                 item.RefreshFileName();
                 item.Status = "Renamed";
+                batchEntries.Add(new RenameBatchEntry
+                {
+                    OriginalPath = oldPath,
+                    RenamedPath = targetPath
+                });
                 _executionQueue.Complete(job, $"Renamed to {Path.GetFileName(targetPath)}");
                 renamed++;
             }
@@ -891,9 +897,67 @@ public partial class MainWindowViewModel
         }
 
         RenameStatusText = $"Rename complete: {renamed} renamed, {skipped} skipped";
+        if (batchEntries.Count > 0)
+        {
+            _renameBatchHistory.RecordBatch(new RenameBatchRecord
+            {
+                CreatedAt = DateTime.Now,
+                Provider = NormalizeLookupProvider(RenameLookupProvider),
+                Template = RenameTemplate,
+                TotalFiles = batchEntries.Count,
+                Entries = batchEntries
+            });
+            RenameLog($"Recorded undo batch for {batchEntries.Count} renamed file(s).");
+        }
+
         RenameLog(RenameStatusText);
         CompleteExecutionWorkflow(RenameStatusText);
         SyncRenameFromDashboardSelection(preserveSearchTitle: true, writeLog: false);
+    }
+
+    private RenameBatchUndoPreview PreviewRenameBatchUndo(RenameBatchRecord batch)
+        => _renameBatchHistory.PreviewUndoBatch(batch);
+
+    private Task<RenameBatchUndoResult> UndoRenameBatchAsync(RenameBatchRecord batch)
+    {
+        var result = _renameBatchHistory.UndoBatch(batch);
+        RenameConsoleLines.Clear();
+        foreach (var line in result.Lines)
+        {
+            RenameConsoleLines.Add(line);
+        }
+
+        RefreshDashboardPathsAfterRenameUndo(batch);
+        RenameStatusText = $"Undo batch complete: {result.Renamed} restored, {result.Skipped} skipped";
+        CompleteExecutionWorkflow(RenameStatusText);
+        SyncRenameFromDashboardSelection(preserveSearchTitle: true, writeLog: false);
+        return Task.FromResult(result);
+    }
+
+    private void RefreshDashboardPathsAfterRenameUndo(RenameBatchRecord batch)
+    {
+        foreach (var entry in batch.Entries)
+        {
+            if (!File.Exists(entry.OriginalPath) || File.Exists(entry.RenamedPath)) continue;
+
+            var dashboardFile = Files.FirstOrDefault(file => string.Equals(file.FilePath, entry.RenamedPath, StringComparison.OrdinalIgnoreCase));
+            if (dashboardFile is not null)
+            {
+                MoveDashboardCacheEntryAfterRename(dashboardFile, entry.RenamedPath, entry.OriginalPath);
+                AppState.UpdateDashboardFilePath(dashboardFile, entry.OriginalPath);
+                dashboardFile.Status = "Rename undone";
+            }
+
+            if (AppState.SelectedFile is not null && string.Equals(AppState.SelectedFile.FilePath, entry.RenamedPath, StringComparison.OrdinalIgnoreCase))
+            {
+                AppState.SelectedFile = dashboardFile;
+            }
+
+            if (string.Equals(PropEditTemplateFilePath, entry.RenamedPath, StringComparison.OrdinalIgnoreCase))
+            {
+                PropEditTemplateFilePath = entry.OriginalPath;
+            }
+        }
     }
 
     private void MoveDashboardCacheEntryAfterRename(MkvFileItem dashboardFile, string oldPath, string newPath)

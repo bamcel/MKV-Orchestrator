@@ -37,6 +37,12 @@ public partial class MainWindow : Window
             var dialog = new OutputWindow(title, lines);
             _ = dialog.ShowDialog(this);
         };
+
+        vm.ShowRenameUndoWindowAsync = async (batches, clearBatches, previewUndoBatch, undoBatchAsync) =>
+        {
+            var dialog = new RenameUndoBatchDialog(batches, clearBatches, previewUndoBatch, undoBatchAsync);
+            await dialog.ShowDialog(this);
+        };
     }
 
     private void LoadWindowIcon()
