@@ -37,7 +37,6 @@
               <Grid Grid.Row="4" ColumnDefinitions="*,120" ColumnSpacing="6" HorizontalAlignment="Left" Width="330">
                 <StackPanel Grid.Column="0" Spacing="3">
                   <TextBox Text="{Binding RenameSearchTitle}"
-                           Watermark="Example: Justified"
                            MinHeight="36"
                            Padding="10,0,8,0" />
                 </StackPanel>
