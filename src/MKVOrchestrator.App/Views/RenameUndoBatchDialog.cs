@@ -190,8 +190,8 @@ public sealed class RenameUndoBatchDialog : Window
         _undoButton.IsEnabled = false;
         _undoButton.Click += async (_, _) => await UndoSelectedAsync();
 
-        actionButtons.Children.Add(closeButton);
         actionButtons.Children.Add(_undoButton);
+        actionButtons.Children.Add(closeButton);
         Grid.SetColumn(actionButtons, 2);
         footer.Children.Add(actionButtons);
         Grid.SetRow(footer, 2);
