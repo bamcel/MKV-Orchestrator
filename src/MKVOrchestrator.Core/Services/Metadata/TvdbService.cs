@@ -60,6 +60,7 @@ public sealed class TvdbService
             if (string.IsNullOrWhiteSpace(name)) name = ReadLocalizedString(item, "seriesName", language);
             if (string.IsNullOrWhiteSpace(name)) name = ReadLocalizedString(item, "title", language);
             if (id == 0 || string.IsNullOrWhiteSpace(name)) continue;
+            var slug = ReadString(item, "slug");
 
             results.Add(new TvdbSeriesSearchResult
             {
@@ -69,17 +70,24 @@ public sealed class TvdbService
                 Overview = ReadLocalizedString(item, "overview", language),
                 Provider = "TVDB",
                 Format = type.Equals("movie", StringComparison.OrdinalIgnoreCase) ? "Movie" : "TV",
-                DatabaseUrl = BuildDatabaseUrl(type, id)
+                DatabaseUrl = BuildDatabaseUrl(type, id, slug)
             });
         }
 
         return results;
     }
 
-    private static string BuildDatabaseUrl(string type, int id)
+    private static string BuildDatabaseUrl(string type, int id, string slug)
     {
-        var path = type.Equals("movie", StringComparison.OrdinalIgnoreCase) ? "movie" : "series";
-        return $"https://thetvdb.com/dereferrer/{path}/{id}";
+        var isMovie = type.Equals("movie", StringComparison.OrdinalIgnoreCase);
+        var publicPath = isMovie ? "movies" : "series";
+        if (!string.IsNullOrWhiteSpace(slug))
+        {
+            return $"https://thetvdb.com/{publicPath}/{Uri.EscapeDataString(slug.Trim())}";
+        }
+
+        var dereferrerPath = isMovie ? "movie" : "series";
+        return $"https://thetvdb.com/dereferrer/{dereferrerPath}/{id}";
     }
 
     public async Task<IReadOnlyList<TvdbEpisode>> GetEpisodesAsync(string apiKey, string pin, TvdbSeriesSearchResult selectedResult, string preferredLanguage, string seasonFilter, CancellationToken token)

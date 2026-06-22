@@ -5,7 +5,7 @@
              x:DataType="vm:MainWindowViewModel">
         <Grid RowDefinitions="*" ColumnDefinitions="370,*" RowSpacing="12" ColumnSpacing="12" Margin="0,12,0,0">
           <Border Classes="card" Grid.Row="0" Grid.Column="0" Padding="8">
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="4">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="4">
               <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
                 <TextBlock Grid.Column="0" Text="Rename Options" Classes="section-header" Margin="0" />
                 <Button Grid.Column="1"
@@ -24,17 +24,9 @@
                          FontSize="11"
                          Margin="0,0,0,6" />
 
-              <Border Grid.Row="2" Classes="console" Padding="8" MinHeight="30" HorizontalAlignment="Left" Width="330">
-                <TextBlock Text="{Binding AppState.DashboardSelectionStatus}"
-                           Classes="success"
-                           FontSize="12"
-                           TextWrapping="NoWrap"
-                           TextTrimming="CharacterEllipsis" />
-              </Border>
+              <TextBlock Grid.Row="2" Text="Search Title" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <TextBlock Grid.Row="3" Text="Search Title" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
-
-              <Grid Grid.Row="4" ColumnDefinitions="*,120" ColumnSpacing="6" HorizontalAlignment="Left" Width="330">
+              <Grid Grid.Row="3" ColumnDefinitions="*,120" ColumnSpacing="6" HorizontalAlignment="Left" Width="330">
                 <StackPanel Grid.Column="0" Spacing="3">
                   <TextBox Text="{Binding RenameSearchTitle}"
                            MinHeight="36"
@@ -49,9 +41,9 @@
                         VerticalAlignment="Bottom" />
               </Grid>
 
-              <TextBlock Grid.Row="5" Text="Database Options" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
+              <TextBlock Grid.Row="4" Text="Database Options" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <Grid Grid.Row="6" ColumnDefinitions="*,*" ColumnSpacing="6" HorizontalAlignment="Left" Width="330">
+              <Grid Grid.Row="5" ColumnDefinitions="*,*" ColumnSpacing="6" HorizontalAlignment="Left" Width="330">
                 <StackPanel Grid.Column="0" Spacing="3">
                   <ComboBox ItemsSource="{Binding RenameLookupProviderOptions}"
                             SelectedItem="{Binding RenameLookupProvider}"
@@ -66,14 +58,14 @@
                 </StackPanel>
               </Grid>
 
-              <StackPanel Grid.Row="7" IsVisible="{Binding IsBusy}" Spacing="3">
+              <StackPanel Grid.Row="6" IsVisible="{Binding IsBusy}" Spacing="3">
                 <ProgressBar IsIndeterminate="True" Height="5" />
                 <TextBlock Text="{Binding RenameStatusText}" Classes="muted" FontSize="11" TextWrapping="Wrap" />
               </StackPanel>
 
-              <TextBlock Grid.Row="8" Text="Series/Movie" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
+              <TextBlock Grid.Row="7" Text="Series/Movie" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <StackPanel Grid.Row="9" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
+              <StackPanel Grid.Row="8" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
                 <ComboBox ItemsSource="{Binding TvdbSeriesResults}"
                           SelectedItem="{Binding SelectedTvdbSeries}"
                           HorizontalAlignment="Stretch"
@@ -96,26 +88,39 @@
                 </ComboBox>
               </StackPanel>
 
-              <StackPanel Grid.Row="10"
+              <StackPanel Grid.Row="9"
                           IsVisible="{Binding HasSelectedDatabaseUrl}"
                           Spacing="3"
                           HorizontalAlignment="Left"
                           Width="322"
                           MaxWidth="322"
                           Margin="8,2,0,0">
-                <TextBlock Text="{Binding SelectedDatabaseUrl}"
-                           Classes="success"
-                           FontSize="12"
-                           Cursor="Hand"
-                           TextWrapping="NoWrap"
-                           TextTrimming="CharacterEllipsis"
-                           ToolTip.Tip="Left click to open. Right click to copy."
-                           PointerPressed="DatabaseUrlText_PointerPressed" />
+                <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="2">
+                  <TextBlock Grid.Column="0"
+                             Text="{Binding SelectedDatabaseUrl}"
+                             Classes="success"
+                             FontSize="12"
+                             MaxWidth="282"
+                             TextWrapping="NoWrap"
+                             TextTrimming="CharacterEllipsis"
+                             VerticalAlignment="Center" />
+                  <Button Grid.Column="1"
+                          Classes="inline-glyph"
+                          Content="↗"
+                          Command="{Binding OpenSelectedDatabaseUrlCommand}"
+                          ToolTip.Tip="Open" />
+                  <Button Grid.Column="2"
+                          Classes="inline-glyph"
+                          Content="⧉"
+                          Command="{Binding CopySelectedDatabaseUrlCommand}"
+                          CommandParameter="{Binding $parent[Window]}"
+                          ToolTip.Tip="Copy" />
+                </Grid>
               </StackPanel>
 
-              <TextBlock Grid.Row="11" Text="Episodes" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
+              <TextBlock Grid.Row="10" Text="Episodes" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <StackPanel Grid.Row="12" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
+              <StackPanel Grid.Row="11" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
                 <Expander Classes="scope-dropdown"
                           HorizontalAlignment="Stretch"
                           MaxWidth="330"
@@ -161,9 +166,9 @@
                 </Expander>
               </StackPanel>
 
-              <TextBlock Grid.Row="13" Text="Naming Template" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
+              <TextBlock Grid.Row="12" Text="Naming Template" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <StackPanel Grid.Row="14" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
+              <StackPanel Grid.Row="13" Spacing="3" HorizontalAlignment="Left" Width="330" MaxWidth="330">
                 <ComboBox ItemsSource="{Binding DisplayedRenameTemplateOptions}"
                           SelectedItem="{Binding SelectedRenameTemplateOption}"
                           HorizontalAlignment="Left"
@@ -196,9 +201,9 @@
                            FontSize="10" />
               </StackPanel>
 
-              <TextBlock Grid.Row="15" Text="Execution" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
+              <TextBlock Grid.Row="14" Text="Execution" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,5,0,1" />
 
-              <StackPanel Grid.Row="16" Orientation="Horizontal" Spacing="6" Margin="0,6,0,0" HorizontalAlignment="Left">
+              <StackPanel Grid.Row="15" Orientation="Horizontal" Spacing="6" Margin="0,6,0,0" HorizontalAlignment="Left">
                 <Button Width="96"
                         Command="{Binding BuildRenamePreviewCommand}"
                         IsEnabled="{Binding !IsBusy}">
@@ -210,7 +215,7 @@
                 <Button Content="Apply" Width="96" Command="{Binding ApplyRenamePreviewCommand}" />
               </StackPanel>
 
-              <Border Grid.Row="17" Classes="console" Padding="8" MinHeight="58" HorizontalAlignment="Left" Width="330">
+              <Border Grid.Row="16" Classes="console" Padding="8" MinHeight="58" HorizontalAlignment="Left" Width="330">
                 <TextBlock Text="{Binding RenameStatusText}"
                            Classes="success"
                            TextWrapping="Wrap"

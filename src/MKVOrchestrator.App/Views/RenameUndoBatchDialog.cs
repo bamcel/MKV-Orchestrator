@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -20,8 +21,8 @@ public sealed class RenameUndoBatchDialog : Window
     private readonly Func<RenameBatchRecord, RenameBatchUndoPreview> _previewUndoBatch;
     private readonly Func<RenameBatchRecord, Task<RenameBatchUndoResult>> _undoBatchAsync;
     private readonly ListBox _batchList = new();
-    private readonly ListBox _entryList = new();
-    private readonly ListBox _summaryList = new();
+    private readonly ItemsControl _entryList = new();
+    private readonly ItemsControl _summaryList = new();
     private readonly Button _undoButton = new();
     private string _pendingProceedBatchId = string.Empty;
 
@@ -151,9 +152,9 @@ public sealed class RenameUndoBatchDialog : Window
             ColumnSpacing = 12
         };
 
-        body.Children.Add(BuildPanel("Last 20 Batch Jobs", _batchList, 0));
-        body.Children.Add(BuildPanel("Files To Restore", _entryList, 1));
-        body.Children.Add(BuildPanel("Summary", _summaryList, 2));
+        body.Children.Add(BuildSelectablePanel("Last 20 Batch Jobs", _batchList, 0));
+        body.Children.Add(BuildReadOnlyPanel("Files To Restore", _entryList, 1));
+        body.Children.Add(BuildReadOnlyPanel("Summary", _summaryList, 2));
         Grid.SetRow(body, 1);
         root.Children.Add(body);
 
@@ -214,7 +215,42 @@ public sealed class RenameUndoBatchDialog : Window
         return button;
     }
 
-    private static Border BuildPanel(string title, ListBox list, int column)
+    private static Border BuildSelectablePanel(string title, ListBox list, int column)
+    {
+        var panel = BuildPanelShell(title, column, out var dock);
+
+        ApplyListBoxChrome(list);
+        list.ItemTemplate = BuildReadOnlyTextTemplate();
+        dock.Children.Add(list);
+
+        return panel;
+    }
+
+    private static Border BuildReadOnlyPanel(string title, ItemsControl list, int column)
+    {
+        var panel = BuildPanelShell(title, column, out var dock);
+
+        list.FontFamily = new FontFamily("Consolas");
+        list.FontSize = 12;
+        list.Foreground = ResourceBrush("ThemeTextBrush", "#F8F8F2");
+        list.ItemTemplate = BuildReadOnlyTextTemplate();
+
+        var scrollViewer = new ScrollViewer
+        {
+            Background = ResourceBrush("ThemeInputBackgroundBrush", "#282A36"),
+            BorderBrush = ResourceBrush("ThemeButtonBackgroundBrush", "#44475A"),
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(4),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Content = list
+        };
+        dock.Children.Add(scrollViewer);
+
+        return panel;
+    }
+
+    private static Border BuildPanelShell(string title, int column, out DockPanel dock)
     {
         var panel = new Border
         {
@@ -225,7 +261,7 @@ public sealed class RenameUndoBatchDialog : Window
             Padding = new Thickness(8)
         };
 
-        var dock = new DockPanel();
+        dock = new DockPanel();
         dock.Children.Add(new TextBlock
         {
             Text = title,
@@ -235,6 +271,13 @@ public sealed class RenameUndoBatchDialog : Window
         });
         DockPanel.SetDock(dock.Children[0], Dock.Top);
 
+        panel.Child = dock;
+        Grid.SetColumn(panel, column);
+        return panel;
+    }
+
+    private static void ApplyListBoxChrome(ListBox list)
+    {
         list.FontFamily = new FontFamily("Consolas");
         list.FontSize = 12;
         list.Background = ResourceBrush("ThemeInputBackgroundBrush", "#282A36");
@@ -242,7 +285,10 @@ public sealed class RenameUndoBatchDialog : Window
         list.BorderBrush = ResourceBrush("ThemeButtonBackgroundBrush", "#44475A");
         list.BorderThickness = new Thickness(1);
         list.Padding = new Thickness(4);
-        list.ItemTemplate = new FuncDataTemplate<string>((value, _) => new TextBlock
+    }
+
+    private static FuncDataTemplate<string> BuildReadOnlyTextTemplate()
+        => new((value, _) => new TextBlock
         {
             Text = value,
             TextWrapping = TextWrapping.Wrap,
@@ -251,12 +297,6 @@ public sealed class RenameUndoBatchDialog : Window
             FontSize = 12,
             Margin = new Thickness(2, 1)
         }, true);
-        dock.Children.Add(list);
-
-        panel.Child = dock;
-        Grid.SetColumn(panel, column);
-        return panel;
-    }
 
     private void LoadBatches()
     {
