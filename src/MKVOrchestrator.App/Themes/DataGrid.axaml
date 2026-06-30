@@ -20,6 +20,7 @@
   <Style Selector="DataGridCell">
     <Setter Property="Padding" Value="2,0" />
     <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
@@ -27,6 +28,7 @@
 
   <Style Selector="DataGridRow">
     <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="BorderThickness" Value="0" />
   </Style>
@@ -41,6 +43,7 @@
 
   <Style Selector="DataGridCell TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
   <Style Selector="DataGridRow:selected">
@@ -99,6 +102,7 @@
     <Setter Property="Focusable" Value="False" />
     <Setter Property="Padding" Value="2,0" />
     <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />

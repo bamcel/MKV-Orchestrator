@@ -7,6 +7,7 @@ var tests = new (string Name, Action Test)[]
     ("ActionPlanner builds mkvpropedit cleanup arguments", ActionPlannerBuildsCleanupArguments),
     ("RenamePlanner sanitizes invalid and Windows-risky filename characters", RenamePlannerSanitizesFileNames),
     ("RenamePlanner blocks duplicate targets", RenamePlannerBlocksDuplicateTargets),
+    ("RenameEpisodeMatcher maps absolute episode to season episode", RenameEpisodeMatcherMapsAbsoluteEpisode),
     ("CrossPlatformRuntime normalizes quoted and environment paths", CrossPlatformRuntimeNormalizesPaths),
     ("CrossPlatformRuntime recognizes MP4 as readable media", CrossPlatformRuntimeRecognizesMp4Media),
     ("CodecDisplayNormalizer normalizes common video aliases", CodecDisplayNormalizerNormalizesCommonVideoAliases),
@@ -74,6 +75,36 @@ static void RenamePlannerBlocksDuplicateTargets()
     var plan = new RenamePlanner().BuildPlan(new RenamePlanRequest(files, "{series} - S{season:00}E{episode:00} - {episodeTitle}", CheckExistingFiles: false));
     AssertTrue(plan.HasBlockingIssues, "duplicate targets should block apply");
     AssertTrue(plan.Items.All(i => !i.CanApply), "all duplicate rows should be non-applicable");
+}
+
+static void RenameEpisodeMatcherMapsAbsoluteEpisode()
+{
+    var episodes = new List<TvdbEpisode>();
+    var id = 1;
+    for (var episode = 1; episode <= 25; episode++)
+    {
+        episodes.Add(new TvdbEpisode { Id = id++, SeasonNumber = 1, EpisodeNumber = episode, Name = $"S1 E{episode}" });
+    }
+
+    for (var episode = 1; episode <= 12; episode++)
+    {
+        episodes.Add(new TvdbEpisode { Id = id++, SeasonNumber = 2, EpisodeNumber = episode, Name = $"S2 E{episode}" });
+    }
+
+    for (var episode = 1; episode <= 27; episode++)
+    {
+        episodes.Add(new TvdbEpisode { Id = id++, SeasonNumber = 3, EpisodeNumber = episode, Name = $"S3 E{episode}" });
+    }
+
+    for (var episode = 1; episode <= 28; episode++)
+    {
+        episodes.Add(new TvdbEpisode { Id = id++, SeasonNumber = 4, EpisodeNumber = episode, Name = $"S4 E{episode}" });
+    }
+
+    AssertTrue(RenameEpisodeMatcher.TryMatchAbsoluteEpisode(episodes, 87, out var match), "absolute episode should map to provider episode");
+    AssertEqual(4, match.Episode.SeasonNumber);
+    AssertEqual(23, match.Episode.EpisodeNumber);
+    AssertEqual("Episode 87 = S04E23", match.StatusText);
 }
 
 static void CrossPlatformRuntimeNormalizesPaths()

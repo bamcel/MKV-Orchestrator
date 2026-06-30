@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using MKVOrchestrator.Core.Models;
 using MKVOrchestrator.Core.Services;
+using MKVOrchestrator.Core.Services.Rename;
 
 namespace MKVOrchestrator.App.ViewModels;
 
@@ -206,6 +207,7 @@ public partial class MainWindowViewModel
 
             var usedEpisodeIds = new HashSet<int>();
             var exactMatched = 0;
+            var absoluteMatched = 0;
             var sequentialMatched = 0;
             var selectedYear = int.TryParse(SelectedTvdbSeries.Year, out var year) ? year : (int?)null;
 
@@ -214,6 +216,7 @@ public partial class MainWindowViewModel
                 item.IsMovieMatch = isMovie;
                 TvdbEpisode? episode = null;
                 var exactMatch = false;
+                AbsoluteEpisodeMatch? absoluteMatch = null;
 
                 if (isMovie)
                 {
@@ -224,6 +227,13 @@ public partial class MainWindowViewModel
                 {
                     episode = mappedEpisode;
                     exactMatch = true;
+                }
+                else if (RenameEpisodeMatcher.TryMatchAbsoluteEpisode(orderedEpisodes, item.AbsoluteEpisode, out var mappedAbsoluteEpisode))
+                {
+                    absoluteMatch = mappedAbsoluteEpisode;
+                    episode = mappedAbsoluteEpisode.Episode;
+                    item.Season = episode.SeasonNumber;
+                    item.Episode = episode.EpisodeNumber;
                 }
                 else
                 {
@@ -261,6 +271,12 @@ public partial class MainWindowViewModel
                     item.Status = "Exact S/E match";
                     exactMatched++;
                 }
+                else if (absoluteMatch is not null)
+                {
+                    item.Confidence = "High";
+                    item.Status = absoluteMatch.StatusText;
+                    absoluteMatched++;
+                }
                 else
                 {
                     item.Confidence = "Low";
@@ -280,7 +296,7 @@ public partial class MainWindowViewModel
 
             RenameStatusText = isMovie
                 ? $"Preview ready: {exactMatched} movie match, {RenameItems.Count - exactMatched} unmatched"
-                : $"Preview ready: {exactMatched} exact, {sequentialMatched} sequential fallback, {RenameItems.Count - exactMatched - sequentialMatched} unmatched";
+                : $"Preview ready: {exactMatched} exact, {absoluteMatched} absolute, {sequentialMatched} sequential fallback, {RenameItems.Count - exactMatched - absoluteMatched - sequentialMatched} unmatched";
             IsRenamePreviewDirty = false;
             BuildRenamePreviewSummary(filesChanged, filesSkipped);
         }
